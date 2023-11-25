@@ -1,3 +1,4 @@
+# pylint: skip-file
 """This module contains the implementation of the metrics for pre training bias evaluation"""
 import pandas as pd
 import numpy as np

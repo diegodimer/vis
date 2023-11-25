@@ -18,7 +18,7 @@ def show_feature_config():
             values = st.slider('Select the privileged class',
                                 df[col].min(), df[col].max(), (df[col].min(), df[col].max()))
             df[f"{col}_privileged"] = df[col].apply(
-                lambda x: "Privileged" if values[0] <= x and values[1] >= x else "Unprivileged")
+                lambda x: "Privileged" if values[0] <= x <= values[1] else "Unprivileged")
             st.session_state.new_col = f"{col}_privileged"
         except KeyError:
             st.error(
@@ -43,14 +43,14 @@ def show_feature_config():
 
         st.session_state.new_col = f"{col}_privileged"
 
-    st.multiselect('Select the metrics to visualize', 
+    st.multiselect('Select the metrics to visualize',
                    ['Class Imbalance', 'KL Divergence', 'KS', 'CDDL'], key="metrics")
     st.selectbox("Select the target variable (attribute to be predicted)", df.columns, key="target")
     st.selectbox("Select the positive outcome", df[st.session_state['target']].unique(),
                  key="positive_outcome")
     if 'CDDL' in st.session_state['metrics']:
         st.selectbox("Select the group variable (for CDDL)", df.columns, key="group_variable")
-    
+
     st.session_state.col = col
 
 
@@ -64,7 +64,7 @@ def compute_metrics():
     metrics = st.session_state.metrics
     target = st.session_state.target
     positive_outcome = st.session_state.positive_outcome
-    
+
     if 'Class Imbalance' in metrics:
         st.markdown("### Class Imbalance")
         try:

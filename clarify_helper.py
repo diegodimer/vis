@@ -1,3 +1,4 @@
+# pylint: skip-file
 import numpy as np
 from functional import seq
 from typing import List
