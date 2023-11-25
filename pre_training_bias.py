@@ -15,7 +15,11 @@ class PreTrainingBias():
         return q_a - q_d
 
     def _kl_divergence(self, p, q):
-        return np.sum(p * np.log(p / q))
+        kl_value = np.sum(p * np.log(self._divide(p, q)))
+        if np.isnan(kl_value):
+            return 0.0
+
+        return kl_value
 
     def _divide(self, a, b) -> float:
         if b == 0 and a == 0:
@@ -92,12 +96,19 @@ class PreTrainingBias():
             cdd = np.append(cdd, d - a)
         return self._divide(np.sum(counts * cdd), np.sum(counts))
 
-    def global_evaluation(self, df: pd.DataFrame, target: str, positive_outcome, protected_attribute, privileged_group, group_variable):
-        """returns a dictionary with the metrics for the given target and protected attribute grouping by the group_variable"""
+    def global_evaluation(self, df: pd.DataFrame, target: str, positive_outcome, 
+                          protected_attribute, privileged_group, group_variable):
+        """returns a dictionary with the metrics for the given target and protected attribute 
+        grouping by the group_variable"""
         dic = {
-            f"class imbalance ({protected_attribute})": self.class_imbalance_per_label(df, protected_attribute, privileged_group),
-            f"kl divergence ({protected_attribute})": self.kl_divergence(df, target, protected_attribute, privileged_group),
-            f"ks ({protected_attribute})": self.ks(df, target, protected_attribute, privileged_group),
-            f"cddl ({protected_attribute}, {group_variable})": self.cddl(df, target, positive_outcome, protected_attribute, privileged_group, group_variable)
+            f"class imbalance ({protected_attribute})": 
+                self.class_imbalance_per_label(df, protected_attribute, privileged_group),
+            f"kl divergence ({protected_attribute})": 
+                self.kl_divergence(df, target, protected_attribute, privileged_group),
+            f"ks ({protected_attribute})": 
+                self.ks(df, target, protected_attribute, privileged_group),
+            f"cddl ({protected_attribute}, {group_variable})": 
+                self.cddl(df, target, positive_outcome, protected_attribute, 
+                          privileged_group, group_variable)
         }
         return dic
