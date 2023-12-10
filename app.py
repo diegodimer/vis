@@ -171,12 +171,12 @@ def main():
         with col2:
             try:
                 compute_metrics()
-            except ValueError:
+            except Exception:
                 pass
         with col3:
             try:
                 show_distribution_charts()
-            except ValueError:
+            except Exception:
                 pass
 
 if __name__ == "__main__":
