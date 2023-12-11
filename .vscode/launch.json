@@ -1,0 +1,15 @@
+{
+        "version": "0.2.0",
+        "configurations": [
+            {
+                "name": "Streamlit",
+                "type": "python",
+                "request": "launch",
+                "module": "streamlit",
+                "args": ["run", "app.py"],
+                "cwd": "/mnt/c/Users/diego/OneDrive/Documentos/visual/visual-analytics",
+                "env": {},
+                "console": "integratedTerminal"
+            }
+        ]
+}

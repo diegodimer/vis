@@ -113,3 +113,39 @@ class PreTrainingBias():
                           privileged_group, group_variable)
         }
         return dic
+
+    def get_class_imbalance_permutation_values(self, df, label, n_repetitions, threshold=None):
+        original_class_imbalance = self.class_imbalance(df, label, threshold)
+        class_imbalance_permutation_values = []
+        for i in range(n_repetitions):
+            df_permuted = df.copy()
+            df_permuted[label] = np.random.permutation(df[label])
+            class_imbalance_permutation_values.append(self.class_imbalance(df_permuted, label, threshold))
+        return class_imbalance_permutation_values, original_class_imbalance
+
+    def get_ks_permutation_values(self, df, target, protected_attribute, privileged_group, n_repetitions):
+        original_ks = self.ks(df, target, protected_attribute, privileged_group)
+        ks_permutation_values = []
+        for i in range(n_repetitions):
+            df_permuted = df.copy()
+            df_permuted[target] = np.random.permutation(df[target])
+            ks_permutation_values.append(self.ks(df_permuted, target, protected_attribute, privileged_group))
+        return ks_permutation_values, original_ks
+
+    def get_cddl_permutation_values(self, df, target, positive_outcome, protected_attribute, privileged_group, group_variable, n_repetitions):
+        original_cddl = self.cddl(df, target, positive_outcome, protected_attribute, privileged_group, group_variable)
+        cddl_permutation_values = []
+        for i in range(n_repetitions):
+            df_permuted = df.copy()
+            df_permuted[target] = np.random.permutation(df[target])
+            cddl_permutation_values.append(self.cddl(df_permuted, target, positive_outcome, protected_attribute, privileged_group, group_variable))
+        return cddl_permutation_values, original_cddl
+
+    def get_kl_divergence_permutation_values(self, df, target, protected_attribute, privileged_group, n_repetitions):
+        original_kl_divergence = self.kl_divergence(df, target, protected_attribute, privileged_group)
+        kl_divergence_permutation_values = []
+        for i in range(n_repetitions):
+            df_permuted = df.copy()
+            df_permuted[target] = np.random.permutation(df[target])
+            kl_divergence_permutation_values.append(self.kl_divergence(df_permuted, target, protected_attribute, privileged_group))
+        return kl_divergence_permutation_values, original_kl_divergence
