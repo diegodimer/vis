@@ -59,7 +59,7 @@ def compute_metrics():
     """
     _ptb = PreTrainingBias()
     df = st.session_state['df']
-    col = st.session_state['new_col'] 
+    col = st.session_state['new_col']
     metrics = st.session_state['metrics']
     target = st.session_state['target']
     positive_outcome = st.session_state['positive_outcome']
@@ -146,7 +146,7 @@ def show_ks(_ptb, df, col, target, permutations_ks):
             ).encode(
                 alt.X("index", title="Permutation Index"),
                 alt.Y("ks", title="KS Value"))
-            
+
     original_ks_line = alt.Chart(pd.DataFrame({'ks': [original_ks]})).mark_rule(color='red').encode( y='ks')
     st.altair_chart(c + original_ks_line, use_container_width=True)
 
@@ -164,7 +164,7 @@ def show_kl_divergence(_ptb, df, col, target, permutations_kl):
             ).encode(
                 alt.X("index", title="Permutation Index"),
                 alt.Y("kl", title="KL Value"))
-        
+
     original_kl_line = alt.Chart(pd.DataFrame({'kl': [original_kl]})).mark_rule(color='red').encode( y='kl')
     st.altair_chart(c + original_kl_line, use_container_width=True)
 
@@ -238,8 +238,8 @@ def get_input_data(file, advanced_settings):
         st.session_state['names']=None
 
     if input_data is not None:
-        df = read_file(input_data, st.session_state['col_sep'], st.session_state['dec_sep'], 
-                       st.session_state['encoding'], st.session_state['header_row'], 
+        df = read_file(input_data, st.session_state['col_sep'], st.session_state['dec_sep'],
+                       st.session_state['encoding'], st.session_state['header_row'],
                        st.session_state['names'])
         if st.toggle("Show sample data", value=False):
             st.markdown("### Sample from Input Data")
@@ -260,7 +260,7 @@ def main():
     """main function"""
     st.markdown("# Bias comparison on uploaded dataset")
     st.session_state['new_col'] = ""
-    
+
     with st.sidebar:
         st.file_uploader(label="Upload a CSV file to use as input data", type={"csv"}, key="file")
         st.header("Configuration")
