@@ -49,42 +49,30 @@ class MapRenderer:
     @staticmethod
     def topojson_version_2023():
         df_2023 = DataReader.state_counts(DataReader.get_srag_2023())
-        african_countries = alt.topo_feature(
-        "https://raw.githubusercontent.com/fititnt/gis-dataset-brasil/master/uf/topojson/uf.json",
-        "uf",
-        )
-        return alt.Chart(african_countries).mark_geoshape(stroke="white", strokeWidth=2).encode(
-            color=alt.Color(
-                "counts:Q",
-                scale=alt.Scale(scheme="yelloworangered"),
-                legend=alt.Legend(title="Num of Cases"),
-            ),
-            tooltip=["id:O", "counts:Q"],
-        ).transform_lookup(
-            lookup="id",
-            from_=alt.LookupData(
-                df_2023, "SG_UF_NOT", ["counts"]
-            ),
-        ).properties(width=800, height=800)
+        return MapRenderer.get_chart(df_2023)
 
 
     @staticmethod
     def topojson_version_2021():
-        df_2023 = DataReader.state_counts(DataReader.get_srag_2023())
-        african_countries = alt.topo_feature(
+        df_2021 = DataReader.state_counts(DataReader.get_srag_2021())
+        return MapRenderer.get_chart(df_2021)
+
+    @staticmethod
+    def get_chart(df):
+        topodf = alt.topo_feature(
         "https://raw.githubusercontent.com/fititnt/gis-dataset-brasil/master/uf/topojson/uf.json",
         "uf",
         )
-        return alt.Chart(african_countries).mark_geoshape(stroke="white", strokeWidth=2).encode(
+        return alt.Chart(topodf).mark_geoshape(stroke="white", strokeWidth=2).encode(
             color=alt.Color(
                 "counts:Q",
-                scale=alt.Scale(scheme="yelloworangered"),
+                scale=alt.Scale(scheme="tealblues"),
                 legend=alt.Legend(title="Num of Cases"),
             ),
             tooltip= [alt.Tooltip("properties.uf:O", title="UF"), alt.Tooltip("counts:Q", title="Num of Cases")],
         ).transform_lookup(
             lookup="id",
             from_=alt.LookupData(
-                df_2023, "SG_UF_NOT", ["counts"]
+                df, "SG_UF_NOT", ["counts"]
             ),
-        ).properties(width=800, height=800)
+        ).properties(width=800, height=800).interactive()
