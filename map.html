@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <style>
+    #vis.vega-embed {
+      width: 100%;
+      display: flex;
+    }
+
+    #vis.vega-embed details,
+    #vis.vega-embed details summary {
+      position: relative;
+    }
+  </style>
+  <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/vega@5"></script>
+  <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/vega-lite@5.16.3"></script>
+  <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/vega-embed@6"></script>
+</head>
+<body>
+  <div id="vis"></div>
+  <script>
+    (function(vegaEmbed) {
+      var spec = {"config": {"view": {"continuousWidth": 300, "continuousHeight": 300}}, "data": {"url": "https://raw.githubusercontent.com/fititnt/gis-dataset-brasil/master/uf/topojson/uf.json", "format": {"feature": "uf", "type": "topojson"}}, "mark": {"type": "geoshape", "stroke": "white", "strokeWidth": 2}, "encoding": {"color": {"field": "counts", "legend": {"title": "Num of Cases"}, "scale": {"scheme": "yelloworangered"}, "type": "quantitative"}, "tooltip": [{"field": "id", "type": "ordinal"}, {"field": "counts", "type": "quantitative"}]}, "height": 800, "transform": [{"lookup": "id", "from": {"data": {"name": "data-1d51f8dde171bbeff42bd7984f2f8fbd"}, "key": "SG_UF_NOT", "fields": ["counts"]}}], "width": 800, "$schema": "https://vega.github.io/schema/vega-lite/v5.16.3.json", "datasets": {"data-1d51f8dde171bbeff42bd7984f2f8fbd": [{"SG_UF_NOT": "AC", "counts": 1752}, {"SG_UF_NOT": "AL", "counts": 998}, {"SG_UF_NOT": "AM", "counts": 2491}, {"SG_UF_NOT": "AP", "counts": 2091}, {"SG_UF_NOT": "BA", "counts": 7378}, {"SG_UF_NOT": "CE", "counts": 7483}, {"SG_UF_NOT": "DF", "counts": 9570}, {"SG_UF_NOT": "ES", "counts": 2662}, {"SG_UF_NOT": "GO", "counts": 5348}, {"SG_UF_NOT": "MA", "counts": 1562}, {"SG_UF_NOT": "MG", "counts": 16600}, {"SG_UF_NOT": "MS", "counts": 5808}, {"SG_UF_NOT": "MT", "counts": 1249}, {"SG_UF_NOT": "PA", "counts": 3033}, {"SG_UF_NOT": "PB", "counts": 3164}, {"SG_UF_NOT": "PE", "counts": 5036}, {"SG_UF_NOT": "PI", "counts": 1271}, {"SG_UF_NOT": "PR", "counts": 21525}, {"SG_UF_NOT": "RJ", "counts": 12744}, {"SG_UF_NOT": "RN", "counts": 2073}, {"SG_UF_NOT": "RO", "counts": 957}, {"SG_UF_NOT": "RR", "counts": 459}, {"SG_UF_NOT": "RS", "counts": 11525}, {"SG_UF_NOT": "SC", "counts": 8370}, {"SG_UF_NOT": "SE", "counts": 2525}, {"SG_UF_NOT": "SP", "counts": 56781}, {"SG_UF_NOT": "TO", "counts": 616}]}};
+      var embedOpt = {"mode": "vega-lite"};
+
+      function showError(el, error){
+          el.innerHTML = ('<div style="color:red;">'
+                          + '<p>JavaScript Error: ' + error.message + '</p>'
+                          + "<p>This usually means there's a typo in your chart specification. "
+                          + "See the javascript console for the full traceback.</p>"
+                          + '</div>');
+          throw error;
+      }
+      const el = document.getElementById('vis');
+      vegaEmbed("#vis", spec, embedOpt)
+        .catch(error => showError(el, error));
+    })(vegaEmbed);
+
+  </script>
+</body>
+</html>

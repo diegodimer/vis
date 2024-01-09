@@ -3,7 +3,7 @@
 import pandas as pd
 import numpy as np
 from numpy import Infinity
-from clarify_helper import pdfs_aligned_nonzero
+from pretrainingbias.clarify_helper import pdfs_aligned_nonzero
 
 
 class PreTrainingBias():

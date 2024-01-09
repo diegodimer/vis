@@ -4,6 +4,8 @@ import pandas as pd
 import streamlit as st
 
 from pretrainingbias.pre_training_bias import PreTrainingBias
+from SRAG.data import DataReader
+from SRAG.maps import MapRenderer
 
 def show_feature_config():
     """show feature configuration"""
@@ -258,23 +260,37 @@ def read_file(input_data, sep, dec, encoding, header_row, names):
 
 def main():
     """main function"""
-    st.markdown("# Bias comparison on uploaded dataset")
-    st.session_state['new_col'] = ""
+    tab1, tab2, tab3 = st.tabs(["Bias Evaluation on Datasets", "SRAG 2021 visualization", "SRAG 2023 visualization"])
+    with tab1: 
+        st.markdown("# Bias comparison on uploaded dataset")
+        st.session_state['new_col'] = ""
 
-    with st.sidebar:
-        st.file_uploader(label="Upload a CSV file to use as input data", type={"csv"}, key="file")
-        st.header("Configuration")
-        st.toggle("Advanced settings", value=False, key="advanced_mode")
-        get_input_data(st.session_state.file, st.session_state.advanced_mode)
+        with st.sidebar:
+            st.file_uploader(label="Upload a CSV file to use as input data", type={"csv"}, key="file")
+            st.header("Configuration")
+            st.toggle("Advanced settings", value=False, key="advanced_mode")
+            get_input_data(st.session_state.file, st.session_state.advanced_mode)
+        if 'df' in st.session_state:
+            col1, col2, col3 = st.columns(3)
+            with col1:
+                show_feature_config()
+            with col2:
+                compute_metrics()
+            with col3:
+                show_distribution_charts()
+    with tab2:
+        st.header("Data for SRAG 2021")
+        df_2021 = DataReader.get_srag_2021()
+        st.write(df_2021[:50])
+        st.altair_chart(MapRenderer.topojson_version_2021(), use_container_width=True)
 
-    if 'df' in st.session_state:
-        col1, col2, col3 = st.columns(3)
-        with col1:
-            show_feature_config()
-        with col2:
-            compute_metrics()
-        with col3:
-            show_distribution_charts()
+
+    with tab3:
+        st.header("Data for SRAG 2023")
+        df_2023 = DataReader.get_srag_2023()
+        st.write(df_2023[:50])
+        st.altair_chart(MapRenderer.topojson_version_2023(), use_container_width=True)
+        
 
 
 if __name__ == "__main__":
