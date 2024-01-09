@@ -261,7 +261,7 @@ def read_file(input_data, sep, dec, encoding, header_row, names):
 def main():
     """main function"""
     tab1, tab2, tab3 = st.tabs(["Bias Evaluation on Datasets", "SRAG 2021 visualization", "SRAG 2023 visualization"])
-    with tab1: 
+    with tab1:
         st.markdown("# Bias comparison on uploaded dataset")
         st.session_state['new_col'] = ""
 
@@ -290,7 +290,7 @@ def main():
         df_2023 = DataReader.get_srag_2023()
         st.write(df_2023[:50])
         st.altair_chart(MapRenderer.topojson_version_2023(), use_container_width=True)
-        
+
 
 
 if __name__ == "__main__":
