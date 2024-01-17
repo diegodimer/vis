@@ -108,8 +108,5 @@ class MapRenderer:
             type="mercator").add_params(alt.selection_interval()).properties(width=1280, height=720)
 
         chart = alt.hconcat(bar, map, center=True, spacing=10, background='white', padding=10, title=f"SRAG {year}" , bounds='full', autosize=alt.AutoSizeParams(type='fit', contains='padding'))
+        
         chart.save(f'resources/geojson/{year}.html')
-
-
-MapRenderer.make_html_maps(DataReader.state_counts_normalized(DataReader.get_srag_2023()), '2023')
-MapRenderer.make_html_maps(DataReader.state_counts_normalized(DataReader.get_srag_2021()), '2021')
