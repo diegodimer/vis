@@ -60,3 +60,12 @@ class DataReader:
     def state_counts(df):
         """ Returns a dataframe with the number of cases per state """
         return df.groupby('SG_UF_NOT').size().reset_index(name='counts')
+
+    @staticmethod
+    def state_counts_normalized(df):
+        """ Returns a dataframe with the number of cases per state normalized by the population"""
+        population = pd.read_csv("resources/datasets/IBGE2022.csv", sep=';', quotechar='"', encoding='utf-8')
+        df = df.groupby('SG_UF_NOT').size().reset_index(name='total')
+        df['population'] = df['SG_UF_NOT'].map(population.set_index('UF')['POPULACAO'])
+        df['normalized'] = df['total']/df['population'] * 100000
+        return df

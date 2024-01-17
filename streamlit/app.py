@@ -282,6 +282,7 @@ def main():
         st.header("Data for SRAG 2021")
         df_2021 = DataReader.get_srag_2021()
         st.write(df_2021[:50])
+        st.plotly_chart(MapRenderer.get_srag_2021_choro(), use_container_width=True)
         st.altair_chart(MapRenderer.topojson_version_2021(), use_container_width=True)
 
 
