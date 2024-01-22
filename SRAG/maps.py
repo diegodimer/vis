@@ -1,11 +1,11 @@
 #pylint: skip-file
-
 import json
 import geopandas as gpd
 from data import DataReader
 import altair as alt
 import plotly.express as px
 import pandas as pd
+from pretrainingbias.pre_training_bias import PreTrainingBias
 
 class MapRenderer:
 
@@ -77,15 +77,21 @@ class MapRenderer:
             type="mercator", scale=1000, center=[-54, -15]).add_params(alt.selection_interval())
         
     @staticmethod
-    def make_html_maps(data, year):
+    def make_html_maps(year):
         json_gdf = MapRenderer.open_geojson()
+        if year == '2023':
+            df = DataReader.get_srag_2023()
+            uf_normalized_data = DataReader.state_counts_normalized(DataReader.get_srag_2023())
+        else:
+            df = DataReader.get_srag_2021()
+            uf_normalized_data = DataReader.state_counts_normalized(DataReader.get_srag_2021())
 
         data_geo = alt.Data(values=json_gdf['features'])
-        data['id'] = data['SG_UF_NOT']
+        uf_normalized_data['id'] = uf_normalized_data['SG_UF_NOT']
 
         pts = alt.selection_point( fields=['id'])
 
-        bar = alt.Chart(data).mark_bar().encode(
+        bar = alt.Chart(uf_normalized_data).mark_bar().encode(
             x=alt.X('normalized:Q', title="Num of Cases per 100k"),
             y=alt.Y('id:N', title="UF"),
             tooltip=[alt.Text('normalized:Q')],
@@ -102,11 +108,45 @@ class MapRenderer:
         ).transform_lookup(
             lookup="id",
             from_=alt.LookupData(
-                data, "id", ["total", 'normalized']
+                uf_normalized_data, "id", ["total", 'normalized']
             ),
         ).project(
             type="mercator").add_params(alt.selection_interval()).properties(width=1280, height=720)
 
-        chart = alt.hconcat(bar, map, center=True, spacing=10, background='white', padding=10, title=f"SRAG {year}" , bounds='full', autosize=alt.AutoSizeParams(type='fit', contains='padding'))
+        _ptb = PreTrainingBias()
         
+        ci_perm, ci_orig = _ptb.get_class_imbalance_permutation_values(df, 'CS_SEXO', 100)
+        ci_chart = MapRenderer.get_metric_dispersion(ci_perm, ci_orig, 'Class Imbalance', pts)
+        
+        kl_perm, kl_orig = _ptb.get_kl_divergence_permutation_values(df, 'UTI', 'CS_SEXO', 'M', 100)
+        kl_chart = MapRenderer.get_metric_dispersion(kl_perm, kl_orig, 'KL Divergence', pts)
+        
+        ks_perm, ks_orig = _ptb.get_ks_permutation_values(df, 'UTI', 'CS_SEXO', 'M', 100)
+        ks_chart = MapRenderer.get_metric_dispersion(ks_perm, ks_orig, 'KS', pts)
+        
+        chart = alt.hconcat(bar, map)
+        metrics_charts = alt.hconcat(ci_chart, kl_chart, ks_chart)
+        chart = alt.vconcat(chart, metrics_charts, center=True, spacing=10, background='white', title=f"SRAG {year}" , bounds='full', autosize=alt.AutoSizeParams(type='fit', contains='padding'))
         chart.save(f'resources/geojson/{year}.html')
+
+    @staticmethod
+    def get_metric_dispersion(permutations, original, metric_name, pts):
+        """ Compute and show metric chart """
+        # permutations_kl, original_kl = _ptb.get_kl_divergence_permutation_values(df, target, col, "Privileged", permutations_kl)
+        df_permutations = pd.DataFrame(permutations, columns=[metric_name])
+        df_permutations = df_permutations.sort_values(metric_name).reset_index(drop=True)
+        df_permutations['index'] = df_permutations.index
+        c = alt.Chart(df_permutations).mark_area(
+                        color="lightblue",
+                    interpolate='step-after',
+                    line=True
+                ).encode(
+                    alt.X("index", title="Permutation Index"),
+                    alt.Y(metric_name, title=f"{metric_name} Value"))
+
+        original_line = alt.Chart(pd.DataFrame({metric_name: [original]})).mark_rule(color='red').encode( y=metric_name)
+        # st.altair_chart(c + original_kl_line, use_container_width=True)
+        return c + original_line
+        
+# MapRenderer.make_html_maps(DataReader.state_counts_normalized(DataReader.get_srag_2021()), '2021')
+MapRenderer.make_html_maps('2023')
