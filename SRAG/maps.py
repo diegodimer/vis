@@ -98,7 +98,7 @@ class MapRenderer:
             color=alt.condition(pts, alt.ColorValue("steelblue"), alt.ColorValue("grey"))
         ).add_params(pts)
        
-        map = alt.Chart(data_geo).transform_filter(pts).add_params(pts).mark_geoshape(stroke="white", strokeWidth=2).encode(
+        map = alt.Chart(data_geo).mark_geoshape(stroke="white", strokeWidth=2).encode(
             color=alt.Color(
                 "normalized:Q",
                 scale=alt.Scale(scheme="tealblues"),
@@ -111,8 +111,12 @@ class MapRenderer:
                 uf_normalized_data, "id", ["total", 'normalized']
             ),
         ).project(
-            type="mercator").add_params(alt.selection_interval()).properties(width=1280, height=720)
-
+            type="mercator").add_params(pts).properties(width=1280, height=720)
+        
+        map = map.encode(
+            opacity=alt.condition(pts, alt.value(1), alt.value(0.3))
+        )
+        
         dfs = DataReader.state_dataframes(df)
         _ptb = PreTrainingBias()
         
@@ -190,7 +194,7 @@ class MapRenderer:
             size=alt.value(2)
         ).transform_filter(pts).add_params(pts)
         return c + original_line
-        
+
 # MapRenderer.make_html_maps(DataReader.state_counts_normalized(DataReader.get_srag_2021()), '2021')
 MapRenderer.make_html_maps('2023')
 MapRenderer.make_html_maps('2021')

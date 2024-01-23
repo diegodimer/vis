@@ -115,6 +115,7 @@ class PreTrainingBias():
         return dic
 
     def get_class_imbalance_permutation_values(self, df, label, n_repetitions, threshold=None):
+        np.random.seed(42)
         original_class_imbalance = self.class_imbalance(df, label, threshold)
         class_imbalance_permutation_values = []
         for i in range(n_repetitions):
@@ -124,6 +125,7 @@ class PreTrainingBias():
         return class_imbalance_permutation_values, original_class_imbalance
 
     def get_ks_permutation_values(self, df, target, protected_attribute, privileged_group, n_repetitions):
+        np.random.seed(42)
         original_ks = self.ks(df, target, protected_attribute, privileged_group)
         ks_permutation_values = []
         for i in range(n_repetitions):
@@ -133,6 +135,7 @@ class PreTrainingBias():
         return ks_permutation_values, original_ks
 
     def get_cddl_permutation_values(self, df, target, positive_outcome, protected_attribute, privileged_group, group_variable, n_repetitions):
+        np.random.seed(42)
         original_cddl = self.cddl(df, target, positive_outcome, protected_attribute, privileged_group, group_variable)
         cddl_permutation_values = []
         for i in range(n_repetitions):
@@ -142,6 +145,7 @@ class PreTrainingBias():
         return cddl_permutation_values, original_cddl
 
     def get_kl_divergence_permutation_values(self, df, target, protected_attribute, privileged_group, n_repetitions):
+        np.random.seed(42)
         original_kl_divergence = self.kl_divergence(df, target, protected_attribute, privileged_group)
         kl_divergence_permutation_values = []
         for i in range(n_repetitions):
