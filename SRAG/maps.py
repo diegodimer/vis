@@ -113,16 +113,49 @@ class MapRenderer:
         ).project(
             type="mercator").add_params(alt.selection_interval()).properties(width=1280, height=720)
 
+        dfs = DataReader.state_dataframes(df)
         _ptb = PreTrainingBias()
         
-        ci_perm, ci_orig = _ptb.get_class_imbalance_permutation_values(df, 'CS_SEXO', 100)
-        ci_chart = MapRenderer.get_metric_dispersion(ci_perm, ci_orig, 'Class Imbalance', pts)
         
-        kl_perm, kl_orig = _ptb.get_kl_divergence_permutation_values(df, 'UTI', 'CS_SEXO', 'M', 100)
-        kl_chart = MapRenderer.get_metric_dispersion(kl_perm, kl_orig, 'KL Divergence', pts)
+        ci_perm = {}
+        ci_orig = {}
+        kl_perm = {}
+        kl_orig = {}
+        ks_perm = {}
+        ks_orig = {}
+        for state in dfs:
+            ci_perm[state], ci_orig[state] = _ptb.get_class_imbalance_permutation_values(dfs[state], 'CS_SEXO', 100)
+            kl_perm[state], kl_orig[state] = _ptb.get_kl_divergence_permutation_values(dfs[state], 'UTI', 'CS_SEXO', 'M', 100)
+            ks_perm[state], ks_orig[state] = _ptb.get_ks_permutation_values(dfs[state], 'UTI', 'CS_SEXO', 'M', 100)
         
-        ks_perm, ks_orig = _ptb.get_ks_permutation_values(df, 'UTI', 'CS_SEXO', 'M', 100)
-        ks_chart = MapRenderer.get_metric_dispersion(ks_perm, ks_orig, 'KS', pts)
+        ci_df_perm = pd.DataFrame(ci_perm)
+        melted_ci_df_perm = pd.melt(ci_df_perm, value_vars=ci_df_perm.columns)
+        melted_ci_df_perm.columns = ['id', 'Class Imbalance']
+        melted_ci_df_perm = melted_ci_df_perm.sort_values("Class Imbalance").reset_index(drop=True)
+        melted_ci_df_perm['index'] = melted_ci_df_perm.index
+
+        ci_orig_df = pd.DataFrame(ci_orig, index=['Class Imbalance'])
+        
+        kl_df_perm = pd.DataFrame(kl_perm)
+        melted_kl_df_perm = pd.melt(kl_df_perm, value_vars=kl_df_perm.columns)
+        melted_kl_df_perm.columns = ['id', 'KL Divergence']
+        melted_kl_df_perm = melted_kl_df_perm.sort_values("KL Divergence").reset_index(drop=True)
+        melted_kl_df_perm['index'] = melted_kl_df_perm.index
+
+        kl_orig_df = pd.DataFrame(kl_orig, index=['KL Divergence'])
+        
+        ks_df_perm = pd.DataFrame(ks_perm)
+        melted_ks_df_perm = pd.melt(ks_df_perm, value_vars=ks_df_perm.columns)
+        melted_ks_df_perm.columns = ['id', 'KS']
+        melted_ks_df_perm = melted_ks_df_perm.sort_values("KS").reset_index(drop=True)
+        melted_ks_df_perm['index'] = melted_ks_df_perm.index
+
+        ks_orig_df = pd.DataFrame(ks_orig, index=['KS'])
+        
+        ci_chart = MapRenderer.get_metric_dispersion(melted_ci_df_perm, ci_orig_df, 'Class Imbalance', pts)
+        kl_chart = MapRenderer.get_metric_dispersion(melted_kl_df_perm, kl_orig_df, 'KL Divergence', pts)
+        ks_chart = MapRenderer.get_metric_dispersion(melted_ks_df_perm, ks_orig_df, 'KS', pts)
+        
         
         chart = alt.hconcat(bar, map)
         metrics_charts = alt.hconcat(ci_chart, kl_chart, ks_chart)
@@ -133,20 +166,31 @@ class MapRenderer:
     def get_metric_dispersion(permutations, original, metric_name, pts):
         """ Compute and show metric chart """
         # permutations_kl, original_kl = _ptb.get_kl_divergence_permutation_values(df, target, col, "Privileged", permutations_kl)
-        df_permutations = pd.DataFrame(permutations, columns=[metric_name])
-        df_permutations = df_permutations.sort_values(metric_name).reset_index(drop=True)
-        df_permutations['index'] = df_permutations.index
-        c = alt.Chart(df_permutations).mark_area(
+        c = alt.Chart(permutations).mark_area(
                         color="lightblue",
                     interpolate='step-after',
                     line=True
                 ).encode(
                     alt.X("index", title="Permutation Index"),
-                    alt.Y(metric_name, title=f"{metric_name} Value"))
+                    alt.Y(metric_name, title=f"{metric_name} Value"),
+                    tooltip=[alt.Tooltip("id:O", title="UF"), alt.Tooltip(metric_name, title=f"{metric_name} Value")],
+                    ).transform_filter(
+                    pts  # Filter data based on the selection
+                    ).add_params(pts)
 
-        original_line = alt.Chart(pd.DataFrame({metric_name: [original]})).mark_rule(color='red').encode( y=metric_name)
-        # st.altair_chart(c + original_kl_line, use_container_width=True)
+        # original_line = alt.Chart(pd.DataFrame({metric_name: [original]})).mark_rule(color='red').encode( y=metric_name)
+        original = original.reset_index().melt('index', var_name='column', value_name=metric_name)
+        original['index'] = original.index
+        original['id'] = original['column']
+        # Create a rule for each column
+        original_line = alt.Chart(original).mark_rule().encode(
+            y=metric_name,
+            color='id:N',
+            tooltip=[alt.Tooltip("id:O", title="UF"), alt.Tooltip(metric_name, title=f"{metric_name} Value")],
+            size=alt.value(2)
+        ).transform_filter(pts).add_params(pts)
         return c + original_line
         
 # MapRenderer.make_html_maps(DataReader.state_counts_normalized(DataReader.get_srag_2021()), '2021')
 MapRenderer.make_html_maps('2023')
+MapRenderer.make_html_maps('2021')

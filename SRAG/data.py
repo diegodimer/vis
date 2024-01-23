@@ -69,3 +69,11 @@ class DataReader:
         df['population'] = df['SG_UF_NOT'].map(population.set_index('UF')['POPULACAO'])
         df['normalized'] = df['total']/df['population'] * 100000
         return df
+
+    @staticmethod
+    def state_dataframes(df):
+        """ Returns a dictionary with the dataframes for each state """
+        dfs = {}
+        for state in df['SG_UF_NOT'].unique():
+            dfs[state] = df.loc[df['SG_UF_NOT'] == state]
+        return dfs
