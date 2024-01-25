@@ -102,6 +102,7 @@ class DataReader:
             new_df = df.loc[df['SG_UF_NOT'] == state].copy()
             dfs[state] = ptb.kl_divergence(new_df, 'UTI', 'CS_RACA_PRIVILEGED', 1)
         df = pd.DataFrame(dfs, index=['KL'])
+        df = pd.melt(df, value_vars=df.columns)
         df.columns = ['id', 'KL']
         return df
     
@@ -114,6 +115,7 @@ class DataReader:
             new_df = df.loc[df['SG_UF_NOT'] == state].copy()
             dfs[state] = ptb.ks(new_df, 'UTI', 'CS_RACA_PRIVILEGED', 1)
         df = pd.DataFrame(dfs, index=['KS'])
+        df = pd.melt(df, value_vars=df.columns)
         df.columns = ['id', 'KS']
         return df
     
@@ -126,6 +128,7 @@ class DataReader:
             new_df = df.loc[df['SG_UF_NOT'] == state].copy()
             dfs[state] = ptb.class_imbalance(new_df, 'CS_RACA_PRIVILEGED')
         df = pd.DataFrame(dfs, index=['CI'])
+        df = pd.melt(df, value_vars=df.columns)
         df.columns = ['id', 'CI']
         return df
     
@@ -136,3 +139,5 @@ class DataReader:
         for state in df['SG_UF_NOT'].unique():
             dfs[state] = df.loc[df['SG_UF_NOT'] == state]
         return dfs
+DataReader.get_srag_2021()
+DataReader.get_srag_2023()
