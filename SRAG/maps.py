@@ -127,10 +127,11 @@ class MapRenderer:
         kl_orig = {}
         ks_perm = {}
         ks_orig = {}
+        dfs['CS_RACA_PRIVILEGED'] = dfs['CS_RACA'].map({1: 1, 2: 0, 3: 0, 4:0, 5:0})
         for state in dfs:
-            ci_perm[state], ci_orig[state] = _ptb.get_class_imbalance_permutation_values(dfs[state], 'CS_SEXO', 100)
-            kl_perm[state], kl_orig[state] = _ptb.get_kl_divergence_permutation_values(dfs[state], 'UTI', 'CS_SEXO', 'M', 100)
-            ks_perm[state], ks_orig[state] = _ptb.get_ks_permutation_values(dfs[state], 'UTI', 'CS_SEXO', 'M', 100)
+            ci_perm[state], ci_orig[state] = _ptb.get_class_imbalance_permutation_values(dfs[state], 'CS_RACA_PRIVILEGED', 100)
+            kl_perm[state], kl_orig[state] = _ptb.get_kl_divergence_permutation_values(dfs[state], 'UTI', 'CS_RACA_PRIVILEGED', 1, 100)
+            ks_perm[state], ks_orig[state] = _ptb.get_ks_permutation_values(dfs[state], 'UTI', 'CS_RACA_PRIVILEGED', 1, 100)
         
         ci_df_perm = pd.DataFrame(ci_perm)
         melted_ci_df_perm = pd.melt(ci_df_perm, value_vars=ci_df_perm.columns)
@@ -163,8 +164,14 @@ class MapRenderer:
         
         chart = alt.hconcat(bar, map)
         metrics_charts = alt.hconcat(ci_chart, kl_chart, ks_chart)
-        chart = alt.vconcat(chart, metrics_charts, center=True, spacing=10, background='white', title=f"SRAG {year}" , bounds='full', autosize=alt.AutoSizeParams(type='fit', contains='padding'))
-        chart.save(f'resources/geojson/{year}.html')
+        chart = alt.vconcat(chart, metrics_charts)
+        
+        kl_map = MapRenderer.get_chart(data_geo, pts, "KL", DataReader.kl_divergence_per_state(df))
+        ks_map = MapRenderer.get_chart(data_geo, pts, "KS", DataReader.ks_per_state(df))
+        ci_map = MapRenderer.get_chart(data_geo, pts, "CI", DataReader.ci_per_state(df))
+        metrics_maps = alt.hconcat(kl_map, ks_map, ci_map)
+        chart = alt.vconat(chart, metrics_maps, center=True, spacing=10, background='white', title=f"SRAG {year}" , bounds='full', autosize=alt.AutoSizeParams(type='fit', contains='padding'))
+        chart.save(f'resources/geojson/{year}-2.html')
 
     @staticmethod
     def get_metric_dispersion(permutations, original, metric_name, pts):
@@ -195,6 +202,26 @@ class MapRenderer:
         ).transform_filter(pts).add_params(pts)
         return c + original_line
 
+    @staticmethod
+    def get_map(data_geo, pts, metric_name, metric_df):
+        map = alt.Chart(data_geo).mark_geoshape(stroke="white", strokeWidth=2).encode(
+            color=alt.Color(
+                "normalized:Q",
+                scale=alt.Scale(scheme="tealblues"),
+                legend=alt.Legend(title="Num of Cases"),
+            ),
+            tooltip=[alt.Tooltip("id:O", title="UF"), alt.Tooltip(f"{metric_name}:Q", title=f"{metric_name} value")],
+        ).transform_lookup(
+            lookup="id",
+            from_=alt.LookupData(
+                metric_df, "id", [metric_name]
+            ),
+        ).project(
+            type="mercator").add_params(pts).properties(width=1280, height=720)
+        
+        map = map.encode(
+            opacity=alt.condition(pts, alt.value(1), alt.value(0.3))
+        )
 # MapRenderer.make_html_maps(DataReader.state_counts_normalized(DataReader.get_srag_2021()), '2021')
 MapRenderer.make_html_maps('2023')
 MapRenderer.make_html_maps('2021')
