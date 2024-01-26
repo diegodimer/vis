@@ -1,0 +1,704 @@
+DATA FROM 2021
+Predicting sul with model for sul
+Confusion Matrix for sul on model trained for sul: 
+[[32687  2248]
+ [ 6509  9212]]
+Classification Report for sul on model trained for sul: 
+              precision    recall  f1-score   support
+
+           0       0.83      0.94      0.88     34935
+           1       0.80      0.59      0.68     15721
+
+    accuracy                           0.83     50656
+   macro avg       0.82      0.76      0.78     50656
+weighted avg       0.82      0.83      0.82     50656
+
+Predicting sul with model for sudeste
+Confusion Matrix for sul on model trained for sudeste: 
+[[33461  1474]
+ [ 7203  8518]]
+Classification Report for sul on model trained for sudeste: 
+              precision    recall  f1-score   support
+
+           0       0.82      0.96      0.89     34935
+           1       0.85      0.54      0.66     15721
+
+    accuracy                           0.83     50656
+   macro avg       0.84      0.75      0.77     50656
+weighted avg       0.83      0.83      0.82     50656
+
+Predicting sul with model for centro_oeste
+Confusion Matrix for sul on model trained for centro_oeste: 
+[[32978  1957]
+ [ 6956  8765]]
+Classification Report for sul on model trained for centro_oeste: 
+              precision    recall  f1-score   support
+
+           0       0.83      0.94      0.88     34935
+           1       0.82      0.56      0.66     15721
+
+    accuracy                           0.82     50656
+   macro avg       0.82      0.75      0.77     50656
+weighted avg       0.82      0.82      0.81     50656
+
+Predicting sul with model for nordeste
+Confusion Matrix for sul on model trained for nordeste: 
+[[28543  6392]
+ [ 5745  9976]]
+Classification Report for sul on model trained for nordeste: 
+              precision    recall  f1-score   support
+
+           0       0.83      0.82      0.82     34935
+           1       0.61      0.63      0.62     15721
+
+    accuracy                           0.76     50656
+   macro avg       0.72      0.73      0.72     50656
+weighted avg       0.76      0.76      0.76     50656
+
+Predicting sul with model for norte
+Confusion Matrix for sul on model trained for norte: 
+[[30698  4237]
+ [ 6098  9623]]
+Classification Report for sul on model trained for norte: 
+              precision    recall  f1-score   support
+
+           0       0.83      0.88      0.86     34935
+           1       0.69      0.61      0.65     15721
+
+    accuracy                           0.80     50656
+   macro avg       0.76      0.75      0.75     50656
+weighted avg       0.79      0.80      0.79     50656
+
+Predicting sudeste with model for sul
+Confusion Matrix for sudeste on model trained for sul: 
+[[71419  8911]
+ [22060 19373]]
+Classification Report for sudeste on model trained for sul: 
+              precision    recall  f1-score   support
+
+           0       0.76      0.89      0.82     80330
+           1       0.68      0.47      0.56     41433
+
+    accuracy                           0.75    121763
+   macro avg       0.72      0.68      0.69    121763
+weighted avg       0.74      0.75      0.73    121763
+
+Predicting sudeste with model for sudeste
+Confusion Matrix for sudeste on model trained for sudeste: 
+[[74710  5620]
+ [23248 18185]]
+Classification Report for sudeste on model trained for sudeste: 
+              precision    recall  f1-score   support
+
+           0       0.76      0.93      0.84     80330
+           1       0.76      0.44      0.56     41433
+
+    accuracy                           0.76    121763
+   macro avg       0.76      0.68      0.70    121763
+weighted avg       0.76      0.76      0.74    121763
+
+Predicting sudeste with model for centro_oeste
+Confusion Matrix for sudeste on model trained for centro_oeste: 
+[[75065  5265]
+ [24356 17077]]
+Classification Report for sudeste on model trained for centro_oeste: 
+              precision    recall  f1-score   support
+
+           0       0.76      0.93      0.84     80330
+           1       0.76      0.41      0.54     41433
+
+    accuracy                           0.76    121763
+   macro avg       0.76      0.67      0.69    121763
+weighted avg       0.76      0.76      0.73    121763
+
+Predicting sudeste with model for nordeste
+Confusion Matrix for sudeste on model trained for nordeste: 
+[[67812 12518]
+ [21368 20065]]
+Classification Report for sudeste on model trained for nordeste: 
+              precision    recall  f1-score   support
+
+           0       0.76      0.84      0.80     80330
+           1       0.62      0.48      0.54     41433
+
+    accuracy                           0.72    121763
+   macro avg       0.69      0.66      0.67    121763
+weighted avg       0.71      0.72      0.71    121763
+
+Predicting sudeste with model for norte
+Confusion Matrix for sudeste on model trained for norte: 
+[[70593  9737]
+ [22332 19101]]
+Classification Report for sudeste on model trained for norte: 
+              precision    recall  f1-score   support
+
+           0       0.76      0.88      0.81     80330
+           1       0.66      0.46      0.54     41433
+
+    accuracy                           0.74    121763
+   macro avg       0.71      0.67      0.68    121763
+weighted avg       0.73      0.74      0.72    121763
+
+Predicting centro_oeste with model for sul
+Confusion Matrix for centro_oeste on model trained for sul: 
+[[12684   743]
+ [ 4016  3384]]
+Classification Report for centro_oeste on model trained for sul: 
+              precision    recall  f1-score   support
+
+           0       0.76      0.94      0.84     13427
+           1       0.82      0.46      0.59      7400
+
+    accuracy                           0.77     20827
+   macro avg       0.79      0.70      0.71     20827
+weighted avg       0.78      0.77      0.75     20827
+
+Predicting centro_oeste with model for sudeste
+Confusion Matrix for centro_oeste on model trained for sudeste: 
+[[12708   719]
+ [ 4176  3224]]
+Classification Report for centro_oeste on model trained for sudeste: 
+              precision    recall  f1-score   support
+
+           0       0.75      0.95      0.84     13427
+           1       0.82      0.44      0.57      7400
+
+    accuracy                           0.76     20827
+   macro avg       0.79      0.69      0.70     20827
+weighted avg       0.78      0.76      0.74     20827
+
+Predicting centro_oeste with model for centro_oeste
+Confusion Matrix for centro_oeste on model trained for centro_oeste: 
+[[10956  2471]
+ [ 2927  4473]]
+Classification Report for centro_oeste on model trained for centro_oeste: 
+              precision    recall  f1-score   support
+
+           0       0.79      0.82      0.80     13427
+           1       0.64      0.60      0.62      7400
+
+    accuracy                           0.74     20827
+   macro avg       0.72      0.71      0.71     20827
+weighted avg       0.74      0.74      0.74     20827
+
+Predicting centro_oeste with model for nordeste
+Confusion Matrix for centro_oeste on model trained for nordeste: 
+[[11283  2144]
+ [ 3358  4042]]
+Classification Report for centro_oeste on model trained for nordeste: 
+              precision    recall  f1-score   support
+
+           0       0.77      0.84      0.80     13427
+           1       0.65      0.55      0.60      7400
+
+    accuracy                           0.74     20827
+   macro avg       0.71      0.69      0.70     20827
+weighted avg       0.73      0.74      0.73     20827
+
+Predicting centro_oeste with model for norte
+Confusion Matrix for centro_oeste on model trained for norte: 
+[[11392  2035]
+ [ 3441  3959]]
+Classification Report for centro_oeste on model trained for norte: 
+              precision    recall  f1-score   support
+
+           0       0.77      0.85      0.81     13427
+           1       0.66      0.54      0.59      7400
+
+    accuracy                           0.74     20827
+   macro avg       0.71      0.69      0.70     20827
+weighted avg       0.73      0.74      0.73     20827
+
+Predicting nordeste with model for sul
+Confusion Matrix for nordeste on model trained for sul: 
+[[20119  1580]
+ [ 7463  6276]]
+Classification Report for nordeste on model trained for sul: 
+              precision    recall  f1-score   support
+
+           0       0.73      0.93      0.82     21699
+           1       0.80      0.46      0.58     13739
+
+    accuracy                           0.74     35438
+   macro avg       0.76      0.69      0.70     35438
+weighted avg       0.76      0.74      0.73     35438
+
+Predicting nordeste with model for sudeste
+Confusion Matrix for nordeste on model trained for sudeste: 
+[[20151  1548]
+ [ 7512  6227]]
+Classification Report for nordeste on model trained for sudeste: 
+              precision    recall  f1-score   support
+
+           0       0.73      0.93      0.82     21699
+           1       0.80      0.45      0.58     13739
+
+    accuracy                           0.74     35438
+   macro avg       0.76      0.69      0.70     35438
+weighted avg       0.76      0.74      0.72     35438
+
+Predicting nordeste with model for centro_oeste
+Confusion Matrix for nordeste on model trained for centro_oeste: 
+[[20149  1550]
+ [ 7654  6085]]
+Classification Report for nordeste on model trained for centro_oeste: 
+              precision    recall  f1-score   support
+
+           0       0.72      0.93      0.81     21699
+           1       0.80      0.44      0.57     13739
+
+    accuracy                           0.74     35438
+   macro avg       0.76      0.69      0.69     35438
+weighted avg       0.75      0.74      0.72     35438
+
+Predicting nordeste with model for nordeste
+Confusion Matrix for nordeste on model trained for nordeste: 
+[[18519  3180]
+ [ 6075  7664]]
+Classification Report for nordeste on model trained for nordeste: 
+              precision    recall  f1-score   support
+
+           0       0.75      0.85      0.80     21699
+           1       0.71      0.56      0.62     13739
+
+    accuracy                           0.74     35438
+   macro avg       0.73      0.71      0.71     35438
+weighted avg       0.74      0.74      0.73     35438
+
+Predicting nordeste with model for norte
+Confusion Matrix for nordeste on model trained for norte: 
+[[19354  2345]
+ [ 7211  6528]]
+Classification Report for nordeste on model trained for norte: 
+              precision    recall  f1-score   support
+
+           0       0.73      0.89      0.80     21699
+           1       0.74      0.48      0.58     13739
+
+    accuracy                           0.73     35438
+   macro avg       0.73      0.68      0.69     35438
+weighted avg       0.73      0.73      0.71     35438
+
+Predicting norte with model for sul
+Confusion Matrix for norte on model trained for sul: 
+[[10209   905]
+ [ 1719  2811]]
+Classification Report for norte on model trained for sul: 
+              precision    recall  f1-score   support
+
+           0       0.86      0.92      0.89     11114
+           1       0.76      0.62      0.68      4530
+
+    accuracy                           0.83     15644
+   macro avg       0.81      0.77      0.78     15644
+weighted avg       0.83      0.83      0.83     15644
+
+Predicting norte with model for sudeste
+Confusion Matrix for norte on model trained for sudeste: 
+[[10308   806]
+ [ 1752  2778]]
+Classification Report for norte on model trained for sudeste: 
+              precision    recall  f1-score   support
+
+           0       0.85      0.93      0.89     11114
+           1       0.78      0.61      0.68      4530
+
+    accuracy                           0.84     15644
+   macro avg       0.81      0.77      0.79     15644
+weighted avg       0.83      0.84      0.83     15644
+
+Predicting norte with model for centro_oeste
+Confusion Matrix for norte on model trained for centro_oeste: 
+[[10250   864]
+ [ 1808  2722]]
+Classification Report for norte on model trained for centro_oeste: 
+              precision    recall  f1-score   support
+
+           0       0.85      0.92      0.88     11114
+           1       0.76      0.60      0.67      4530
+
+    accuracy                           0.83     15644
+   macro avg       0.80      0.76      0.78     15644
+weighted avg       0.82      0.83      0.82     15644
+
+Predicting norte with model for nordeste
+Confusion Matrix for norte on model trained for nordeste: 
+[[8909 2205]
+ [1308 3222]]
+Classification Report for norte on model trained for nordeste: 
+              precision    recall  f1-score   support
+
+           0       0.87      0.80      0.84     11114
+           1       0.59      0.71      0.65      4530
+
+    accuracy                           0.78     15644
+   macro avg       0.73      0.76      0.74     15644
+weighted avg       0.79      0.78      0.78     15644
+
+Predicting norte with model for norte
+Confusion Matrix for norte on model trained for norte: 
+[[10304   810]
+ [ 1848  2682]]
+Classification Report for norte on model trained for norte: 
+              precision    recall  f1-score   support
+
+           0       0.85      0.93      0.89     11114
+           1       0.77      0.59      0.67      4530
+
+    accuracy                           0.83     15644
+   macro avg       0.81      0.76      0.78     15644
+weighted avg       0.82      0.83      0.82     15644
+
+
+
+DATA FROM 2023
+Predicting sul with model for sul
+Confusion Matrix for sul on model trained for sul: 
+[[5408  165]
+ [ 936  799]]
+Classification Report for sul on model trained for sul: 
+              precision    recall  f1-score   support
+
+           0       0.85      0.97      0.91      5573
+           1       0.83      0.46      0.59      1735
+
+    accuracy                           0.85      7308
+   macro avg       0.84      0.72      0.75      7308
+weighted avg       0.85      0.85      0.83      7308
+
+Predicting sul with model for sudeste
+Confusion Matrix for sul on model trained for sudeste: 
+[[5270  303]
+ [ 975  760]]
+Classification Report for sul on model trained for sudeste: 
+              precision    recall  f1-score   support
+
+           0       0.84      0.95      0.89      5573
+           1       0.71      0.44      0.54      1735
+
+    accuracy                           0.83      7308
+   macro avg       0.78      0.69      0.72      7308
+weighted avg       0.81      0.83      0.81      7308
+
+Predicting sul with model for centro_oeste
+Confusion Matrix for sul on model trained for centro_oeste: 
+[[5365  208]
+ [1031  704]]
+Classification Report for sul on model trained for centro_oeste: 
+              precision    recall  f1-score   support
+
+           0       0.84      0.96      0.90      5573
+           1       0.77      0.41      0.53      1735
+
+    accuracy                           0.83      7308
+   macro avg       0.81      0.68      0.71      7308
+weighted avg       0.82      0.83      0.81      7308
+
+Predicting sul with model for nordeste
+Confusion Matrix for sul on model trained for nordeste: 
+[[5155  418]
+ [ 961  774]]
+Classification Report for sul on model trained for nordeste: 
+              precision    recall  f1-score   support
+
+           0       0.84      0.92      0.88      5573
+           1       0.65      0.45      0.53      1735
+
+    accuracy                           0.81      7308
+   macro avg       0.75      0.69      0.71      7308
+weighted avg       0.80      0.81      0.80      7308
+
+Predicting sul with model for norte
+Confusion Matrix for sul on model trained for norte: 
+[[5317  256]
+ [ 987  748]]
+Classification Report for sul on model trained for norte: 
+              precision    recall  f1-score   support
+
+           0       0.84      0.95      0.90      5573
+           1       0.75      0.43      0.55      1735
+
+    accuracy                           0.83      7308
+   macro avg       0.79      0.69      0.72      7308
+weighted avg       0.82      0.83      0.81      7308
+
+Predicting sudeste with model for sul
+Confusion Matrix for sudeste on model trained for sul: 
+[[9606  435]
+ [3459 1444]]
+Classification Report for sudeste on model trained for sul: 
+              precision    recall  f1-score   support
+
+           0       0.74      0.96      0.83     10041
+           1       0.77      0.29      0.43      4903
+
+    accuracy                           0.74     14944
+   macro avg       0.75      0.63      0.63     14944
+weighted avg       0.75      0.74      0.70     14944
+
+Predicting sudeste with model for sudeste
+Confusion Matrix for sudeste on model trained for sudeste: 
+[[9440  601]
+ [2476 2427]]
+Classification Report for sudeste on model trained for sudeste: 
+              precision    recall  f1-score   support
+
+           0       0.79      0.94      0.86     10041
+           1       0.80      0.50      0.61      4903
+
+    accuracy                           0.79     14944
+   macro avg       0.80      0.72      0.74     14944
+weighted avg       0.80      0.79      0.78     14944
+
+Predicting sudeste with model for centro_oeste
+Confusion Matrix for sudeste on model trained for centro_oeste: 
+[[9615  426]
+ [3499 1404]]
+Classification Report for sudeste on model trained for centro_oeste: 
+              precision    recall  f1-score   support
+
+           0       0.73      0.96      0.83     10041
+           1       0.77      0.29      0.42      4903
+
+    accuracy                           0.74     14944
+   macro avg       0.75      0.62      0.62     14944
+weighted avg       0.74      0.74      0.69     14944
+
+Predicting sudeste with model for nordeste
+Confusion Matrix for sudeste on model trained for nordeste: 
+[[9166  875]
+ [3310 1593]]
+Classification Report for sudeste on model trained for nordeste: 
+              precision    recall  f1-score   support
+
+           0       0.73      0.91      0.81     10041
+           1       0.65      0.32      0.43      4903
+
+    accuracy                           0.72     14944
+   macro avg       0.69      0.62      0.62     14944
+weighted avg       0.71      0.72      0.69     14944
+
+Predicting sudeste with model for norte
+Confusion Matrix for sudeste on model trained for norte: 
+[[9581  460]
+ [3416 1487]]
+Classification Report for sudeste on model trained for norte: 
+              precision    recall  f1-score   support
+
+           0       0.74      0.95      0.83     10041
+           1       0.76      0.30      0.43      4903
+
+    accuracy                           0.74     14944
+   macro avg       0.75      0.63      0.63     14944
+weighted avg       0.75      0.74      0.70     14944
+
+Predicting centro_oeste with model for sul
+Confusion Matrix for centro_oeste on model trained for sul: 
+[[2655   89]
+ [ 732  417]]
+Classification Report for centro_oeste on model trained for sul: 
+              precision    recall  f1-score   support
+
+           0       0.78      0.97      0.87      2744
+           1       0.82      0.36      0.50      1149
+
+    accuracy                           0.79      3893
+   macro avg       0.80      0.67      0.69      3893
+weighted avg       0.80      0.79      0.76      3893
+
+Predicting centro_oeste with model for sudeste
+Confusion Matrix for centro_oeste on model trained for sudeste: 
+[[2580  164]
+ [ 720  429]]
+Classification Report for centro_oeste on model trained for sudeste: 
+              precision    recall  f1-score   support
+
+           0       0.78      0.94      0.85      2744
+           1       0.72      0.37      0.49      1149
+
+    accuracy                           0.77      3893
+   macro avg       0.75      0.66      0.67      3893
+weighted avg       0.76      0.77      0.75      3893
+
+Predicting centro_oeste with model for centro_oeste
+Confusion Matrix for centro_oeste on model trained for centro_oeste: 
+[[2580  164]
+ [ 526  623]]
+Classification Report for centro_oeste on model trained for centro_oeste: 
+              precision    recall  f1-score   support
+
+           0       0.83      0.94      0.88      2744
+           1       0.79      0.54      0.64      1149
+
+    accuracy                           0.82      3893
+   macro avg       0.81      0.74      0.76      3893
+weighted avg       0.82      0.82      0.81      3893
+
+Predicting centro_oeste with model for nordeste
+Confusion Matrix for centro_oeste on model trained for nordeste: 
+[[2561  183]
+ [ 727  422]]
+Classification Report for centro_oeste on model trained for nordeste: 
+              precision    recall  f1-score   support
+
+           0       0.78      0.93      0.85      2744
+           1       0.70      0.37      0.48      1149
+
+    accuracy                           0.77      3893
+   macro avg       0.74      0.65      0.67      3893
+weighted avg       0.75      0.77      0.74      3893
+
+Predicting centro_oeste with model for norte
+Confusion Matrix for centro_oeste on model trained for norte: 
+[[2602  142]
+ [ 699  450]]
+Classification Report for centro_oeste on model trained for norte: 
+              precision    recall  f1-score   support
+
+           0       0.79      0.95      0.86      2744
+           1       0.76      0.39      0.52      1149
+
+    accuracy                           0.78      3893
+   macro avg       0.77      0.67      0.69      3893
+weighted avg       0.78      0.78      0.76      3893
+
+Predicting nordeste with model for sul
+Confusion Matrix for nordeste on model trained for sul: 
+[[3514  172]
+ [ 913  475]]
+Classification Report for nordeste on model trained for sul: 
+              precision    recall  f1-score   support
+
+           0       0.79      0.95      0.87      3686
+           1       0.73      0.34      0.47      1388
+
+    accuracy                           0.79      5074
+   macro avg       0.76      0.65      0.67      5074
+weighted avg       0.78      0.79      0.76      5074
+
+Predicting nordeste with model for sudeste
+Confusion Matrix for nordeste on model trained for sudeste: 
+[[3436  250]
+ [ 891  497]]
+Classification Report for nordeste on model trained for sudeste: 
+              precision    recall  f1-score   support
+
+           0       0.79      0.93      0.86      3686
+           1       0.67      0.36      0.47      1388
+
+    accuracy                           0.78      5074
+   macro avg       0.73      0.65      0.66      5074
+weighted avg       0.76      0.78      0.75      5074
+
+Predicting nordeste with model for centro_oeste
+Confusion Matrix for nordeste on model trained for centro_oeste: 
+[[3531  155]
+ [ 947  441]]
+Classification Report for nordeste on model trained for centro_oeste: 
+              precision    recall  f1-score   support
+
+           0       0.79      0.96      0.87      3686
+           1       0.74      0.32      0.44      1388
+
+    accuracy                           0.78      5074
+   macro avg       0.76      0.64      0.65      5074
+weighted avg       0.78      0.78      0.75      5074
+
+Predicting nordeste with model for nordeste
+Confusion Matrix for nordeste on model trained for nordeste: 
+[[3472  214]
+ [ 657  731]]
+Classification Report for nordeste on model trained for nordeste: 
+              precision    recall  f1-score   support
+
+           0       0.84      0.94      0.89      3686
+           1       0.77      0.53      0.63      1388
+
+    accuracy                           0.83      5074
+   macro avg       0.81      0.73      0.76      5074
+weighted avg       0.82      0.83      0.82      5074
+
+Predicting nordeste with model for norte
+Confusion Matrix for nordeste on model trained for norte: 
+[[3508  178]
+ [ 920  468]]
+Classification Report for nordeste on model trained for norte: 
+              precision    recall  f1-score   support
+
+           0       0.79      0.95      0.86      3686
+           1       0.72      0.34      0.46      1388
+
+    accuracy                           0.78      5074
+   macro avg       0.76      0.64      0.66      5074
+weighted avg       0.77      0.78      0.75      5074
+
+Predicting norte with model for sul
+Confusion Matrix for norte on model trained for sul: 
+[[1690   87]
+ [ 206  218]]
+Classification Report for norte on model trained for sul: 
+              precision    recall  f1-score   support
+
+           0       0.89      0.95      0.92      1777
+           1       0.71      0.51      0.60       424
+
+    accuracy                           0.87      2201
+   macro avg       0.80      0.73      0.76      2201
+weighted avg       0.86      0.87      0.86      2201
+
+Predicting norte with model for sudeste
+Confusion Matrix for norte on model trained for sudeste: 
+[[1674  103]
+ [ 202  222]]
+Classification Report for norte on model trained for sudeste: 
+              precision    recall  f1-score   support
+
+           0       0.89      0.94      0.92      1777
+           1       0.68      0.52      0.59       424
+
+    accuracy                           0.86      2201
+   macro avg       0.79      0.73      0.75      2201
+weighted avg       0.85      0.86      0.85      2201
+
+Predicting norte with model for centro_oeste
+Confusion Matrix for norte on model trained for centro_oeste: 
+[[1688   89]
+ [ 228  196]]
+Classification Report for norte on model trained for centro_oeste: 
+              precision    recall  f1-score   support
+
+           0       0.88      0.95      0.91      1777
+           1       0.69      0.46      0.55       424
+
+    accuracy                           0.86      2201
+   macro avg       0.78      0.71      0.73      2201
+weighted avg       0.84      0.86      0.84      2201
+
+Predicting norte with model for nordeste
+Confusion Matrix for norte on model trained for nordeste: 
+[[1554  223]
+ [ 165  259]]
+Classification Report for norte on model trained for nordeste: 
+              precision    recall  f1-score   support
+
+           0       0.90      0.87      0.89      1777
+           1       0.54      0.61      0.57       424
+
+    accuracy                           0.82      2201
+   macro avg       0.72      0.74      0.73      2201
+weighted avg       0.83      0.82      0.83      2201
+
+Predicting norte with model for norte
+Confusion Matrix for norte on model trained for norte: 
+[[1717   60]
+ [ 195  229]]
+Classification Report for norte on model trained for norte: 
+              precision    recall  f1-score   support
+
+           0       0.90      0.97      0.93      1777
+           1       0.79      0.54      0.64       424
+
+    accuracy                           0.88      2201
+   macro avg       0.85      0.75      0.79      2201
+weighted avg       0.88      0.88      0.88      2201
+

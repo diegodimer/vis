@@ -71,4 +71,4 @@ class ModelTrainer:
         print(classification_report(y_test, y_pred))
         acc = accuracy_score(y_test, y_pred)
         f1 = f1_score(y_test, y_pred)
-        return [acc, f1]
+        return [round(acc, 4), round(f1, 4)]
