@@ -28,8 +28,6 @@ model_2023 = ModelTrainer("2023")
 acc = {}
 f1 = {}
 
-model_2023.generate_regional_models()
-model_2021.generate_regional_models()
 print("DATA FROM 2021")
 
 """ for each region, we predict the UTI with the models for all the other regions """
@@ -44,8 +42,8 @@ for predicted_region in model_2021.region_data:
     acc[predicted_region] = acc_region
     f1[predicted_region] = f1_region
 
-pd.DataFrame(acc).to_csv("resources/datasets/acc-2021-NN.csv")
-pd.DataFrame(f1).to_csv("resources/datasets/f1-2021-NN.csv")
+pd.DataFrame(acc).to_csv("resources/datasets/acc-2021.csv")
+pd.DataFrame(f1).to_csv("resources/datasets/f1-2021.csv")
 
 print("\n\nDATA FROM 2023")
 
@@ -60,5 +58,5 @@ for predicted_region in model_2023.region_data:
     acc[predicted_region] = acc_region
     f1[predicted_region] = f1_region
 
-pd.DataFrame(acc).to_csv("resources/datasets/acc-2023-NN.csv")
-pd.DataFrame(f1).to_csv("resources/datasets/f1-2023-NN.csv")    
+pd.DataFrame(acc).to_csv("resources/datasets/acc-2023.csv")
+pd.DataFrame(f1).to_csv("resources/datasets/f1-2023.csv")    
