@@ -56,14 +56,17 @@ class ModelTrainer:
 
     def load_all_models(self) -> dict:
         """ Load all models from a file"""
+        need_to_train = False
         for region in self.region_data:
             filename = f'resources/models/{self.year}/{region}.sav'
             if os.path.isfile(filename):
                 with open(filename, 'rb') as f:
                     loaded_model = pickle.load(f)
+                print("Found trained model, using it")
                 self.models[region] = loaded_model
             else:
                 need_to_train = True
+        print("Models not found, training them")
         if need_to_train:
             self.generate_regional_models()
 
@@ -74,13 +77,21 @@ class ModelTrainer:
 
         x = target_data.drop(columns=['UTI', 'SG_UF_NOT', 'ID_MUNICIP', 'SG_UF_INTE', 'SG_UF', "ID" ])
         y = target_data['UTI']
-        _, x_test, _, y_test = train_test_split(x, y, test_size=0.2, random_state=42)
 
-        y_pred = model.predict(x_test)
+        y_pred = model.predict(x)
         print(f"Confusion Matrix for {predicted_region} on model trained for {model_region}: ")
-        print(confusion_matrix(y_test, y_pred))
+        print(confusion_matrix(y, y_pred))
         print(f"Classification Report for {predicted_region} on model trained for {model_region}: ")
-        print(classification_report(y_test, y_pred))
-        acc = accuracy_score(y_test, y_pred)
-        f1 = f1_score(y_test, y_pred)
+        print(classification_report(y, y_pred))
+        acc = accuracy_score(y, y_pred)
+        f1 = f1_score(y, y_pred)
+
+        x['predicted'] = y_pred
+        x['actual'] = y
+        file_path = f"resources/datasets/{model_region}"
+        if not os.path.exists(file_path):
+            os.makedirs(file_path)
+        
+        x.to_csv(f"{file_path}/{predicted_region}")
+
         return [round(acc, 4), round(f1, 4)]
