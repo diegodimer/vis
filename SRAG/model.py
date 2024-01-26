@@ -29,22 +29,15 @@ class ModelTrainer:
         x = df.drop(columns=['UTI', 'VACINA_COV', 'SG_UF_NOT', 'ID_MUNICIP', 'SG_UF_INTE', 'SG_UF', "ID" ])
         y = df[target]
         x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=0.2, random_state=42)
-        # n_i = len(x_train.axes[1])
-        # n_o = 1
-        # n_s = len(x_train.axes[0])
-        # alpha = 5
 
-        # number_of_hidden_neurons = round(n_s / (alpha * (n_i + n_o)))
-        # # round(number_of_hidden_neurons)
-        # model = MLPClassifier(solver="adam", hidden_layer_sizes=(number_of_hidden_neurons,), random_state=42)
         print(f"Training for {self.year} with target {self.target}")
 
         model.fit(x_train, y_train)
-        pred_model = model.predict(x_test)
-        print(f"Confusion Matrix for {region}: ")
-        print(confusion_matrix(y_test, pred_model))
-        print(f"Classification Report for {region}: ")
-        print(classification_report(y_test, pred_model))
+        # pred_model = model.predict(x_test)
+        # print(f"Confusion Matrix for {region}: ")
+        # print(confusion_matrix(y_test, pred_model))
+        # print(f"Classification Report for {region}: ")
+        # print(classification_report(y_test, pred_model))
 
         filename = f'resources/models/{self.year}/{region}.sav'
         self.models[region] = model
@@ -54,7 +47,7 @@ class ModelTrainer:
     def generate_regional_models(self, target):
         """ Generate a model for each region"""
         for region, df in self.region_data.items():
-            model = RandomForestClassifier(n_estimators=500, random_state=42)
+            model = RandomForestClassifier(n_estimators=300, random_state=42)
             self.train_and_save_regional_model_for_year(df, region, model, target)
 
     def load_all_models(self) -> dict:
@@ -83,16 +76,18 @@ class ModelTrainer:
         y = target_data[self.target]
 
         y_pred = model.predict(x)
-        print(f"Confusion Matrix for {predicted_region} on model trained for {model_region}: ")
-        print(confusion_matrix(y, y_pred))
-        print(f"Classification Report for {predicted_region} on model trained for {model_region}: ")
-        print(classification_report(y, y_pred))
+        # print(f"Confusion Matrix for {predicted_region} on model trained for {model_region}: ")
+        # print(confusion_matrix(y, y_pred))
+        # print(f"Classification Report for {predicted_region} on model trained for {model_region}: ")
+        # print(classification_report(y, y_pred))
         acc = accuracy_score(y, y_pred)
         f1 = f1_score(y, y_pred)
 
+        print(f"acurácia de {acc} treinando para {predicted_region} com {model_region}")
+
         x['predicted'] = y_pred
         x['actual'] = y
-        file_path = f"resources/datasets/{model_region}"
+        file_path = f"resources/datasets/{self.year}/{model_region}"
         if not os.path.exists(file_path):
             os.makedirs(file_path)
         
