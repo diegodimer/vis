@@ -1,9 +1,11 @@
 """ Module to train the model for a given year"""
 import pickle
 from sklearn.ensemble import RandomForestClassifier
-from sklearn.metrics import classification_report, confusion_matrix
 from sklearn.model_selection import train_test_split
 import pandas as pd
+from sklearn.metrics import confusion_matrix, accuracy_score, classification_report, f1_score
+
+
 
 from SRAG.data import DataReader
 
@@ -67,23 +69,6 @@ class ModelTrainer:
         print(confusion_matrix(y_test, y_pred))
         print(f"Classification Report for {predicted_region} on model trained for {model_region}: ")
         print(classification_report(y_test, y_pred))
-
-# Sex 2021
-# maior discrepancia de KL: nordeste e sul
-# maior discrepancia de KS: nordeste e sul
-# maior discrepancia de CI: norte e nordeste
-
-# Sex 2023
-# maior discrepancia de KL: nordeste e sul
-# maior discrepancia de KS: nordeste e sul
-# maior discrepancia de CI: norte e sul
-
-# Race 2023
-# maior discrepancia de KL: nordeste e sul + nordeste e sudeste + nordeste e centro-oeste
-# maior discrepancia de KS: nordeste e sul + nordeste e sudeste + nordeste e centro-oeste
-# maior discrepancia de CI: sul e sudeste
-
-# Race 2021
-# maior discrepancia de KL: norte e sul + sudeste e norte + centro-oeste e norte
-# maior discrepancia de KS: norte e sul + sudeste e norte + centro-oeste e norte
-# maior discrepancia de CI: sul e sudeste
+        acc = accuracy_score(y_test, y_pred)
+        f1 = f1_score(y_test, y_pred)
+        return [acc, f1]
