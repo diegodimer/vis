@@ -149,7 +149,7 @@ class MapRenderer:
         sex_ci = MapRenderer.get_map(data_geo, year, "CI", data_reader.ci_per_region('CS_SEXO'), 'plasma', 'CS_SEXO')
         alt.hconcat(sex_kl, sex_ks, sex_ci).resolve_scale(color='independent').save(f'resources/maps/sex-{year}.html')
 
-        chart.save(f'resources/geojson/{year}-2.html')
+        chart.save(f'resources/maps/{year}.html')
 
     @staticmethod
     def get_metric_dispersion(permutations, original, metric_name, pts):
@@ -197,6 +197,6 @@ class MapRenderer:
         ).project(
             type="mercator").properties(width=1280, height=720)
 
-        map.save(f"resources/geojson/{metric_name}-{year}-{attribute}-metrics.png")
+        map.save(f"resources/maps/{metric_name}-{year}-{attribute}-metrics.png")
 
         return map
