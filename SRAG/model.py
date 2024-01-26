@@ -66,8 +66,8 @@ class ModelTrainer:
                 self.models[region] = loaded_model
             else:
                 need_to_train = True
-        print("Models not found, training them")
         if need_to_train:
+            print("Models not found, training them")
             self.generate_regional_models()
 
     def predict_for_region(self, model_region, predicted_region) -> list:
@@ -92,6 +92,6 @@ class ModelTrainer:
         if not os.path.exists(file_path):
             os.makedirs(file_path)
         
-        x.to_csv(f"{file_path}/{predicted_region}")
+        x.to_csv(f"{file_path}/{predicted_region}.csv")
 
         return [round(acc, 4), round(f1, 4)]

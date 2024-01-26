@@ -1,6 +1,6 @@
-model,sul,sudeste,centro_oeste,nordeste,norte
-sul,0.9339,0.4105,0.4944,0.4619,0.6191
-sudeste,0.5528,0.9346,0.4902,0.4739,0.6122
-centro_oeste,0.5457,0.4006,0.9376,0.4452,0.569
-nordeste,0.5396,0.4225,0.4818,0.9349,0.5767
-norte,0.5583,0.4125,0.5125,0.4568,0.9404
+,sul,sudeste,centro_oeste,nordeste,norte
+model sul,0.9339,0.4105,0.4944,0.4619,0.6191
+model sudeste,0.5528,0.9346,0.4902,0.4739,0.6122
+model centro_oeste,0.5457,0.4006,0.9376,0.4452,0.569
+model nordeste,0.5396,0.4225,0.4818,0.9349,0.5767
+model norte,0.5583,0.4125,0.5125,0.4568,0.9404

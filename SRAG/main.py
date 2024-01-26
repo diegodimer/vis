@@ -25,8 +25,10 @@ import pandas as pd
 
 model_2021 = ModelTrainer("2021")
 model_2023 = ModelTrainer("2023")
-acc = {}
-f1 = {}
+acc_2021 = {}
+acc_2023 = {}
+f1_2021 = {}
+f1_2023 = {}
 
 print("DATA FROM 2021")
 
@@ -39,11 +41,11 @@ for predicted_region in model_2021.region_data:
         acc_model, f1_model = model_2021.predict_for_region(model_region, predicted_region)
         acc_region[f"model {model_region}"] = acc_model
         f1_region[f"model {model_region}"] = f1_model
-    acc[predicted_region] = acc_region
-    f1[predicted_region] = f1_region
+    acc_2021[predicted_region] = acc_region
+    f1_2021[predicted_region] = f1_region
 
-pd.DataFrame(acc).to_csv("resources/datasets/acc-2021.csv")
-pd.DataFrame(f1).to_csv("resources/datasets/f1-2021.csv")
+pd.DataFrame(acc_2021).to_csv("resources/datasets/acc-2021.csv")
+pd.DataFrame(f1_2021).to_csv("resources/datasets/f1-2021.csv")
 
 print("\n\nDATA FROM 2023")
 
@@ -55,8 +57,8 @@ for predicted_region in model_2023.region_data:
         acc_model, f1_model = model_2023.predict_for_region(model_region, predicted_region)
         acc_region[f"model {model_region}"] = acc_model
         f1_region[f"model {model_region}"] = f1_model
-    acc[predicted_region] = acc_region
-    f1[predicted_region] = f1_region
+    acc_2023[predicted_region] = acc_region
+    f1_2023[predicted_region] = f1_region
 
-pd.DataFrame(acc).to_csv("resources/datasets/acc-2023.csv")
-pd.DataFrame(f1).to_csv("resources/datasets/f1-2023.csv")    
+pd.DataFrame(acc_2023).to_csv("resources/datasets/acc-2023.csv")
+pd.DataFrame(f1_2023).to_csv("resources/datasets/f1-2023.csv")    
