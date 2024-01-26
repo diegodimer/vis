@@ -101,8 +101,8 @@ class MapRenderer:
         for state in dfs:
             dfs[state]['CS_RACA_PRIVILEGED'] = dfs[state]['CS_RACA'].map({1: 1, 2: 0, 3: 0, 4:0, 5:0})
             ci_perm[state], ci_orig[state] = _ptb.get_class_imbalance_permutation_values(dfs[state], 'CS_RACA_PRIVILEGED', 100)
-            kl_perm[state], kl_orig[state] = _ptb.get_kl_divergence_permutation_values(dfs[state], 'UTI', 'CS_RACA_PRIVILEGED', 1, 100)
-            ks_perm[state], ks_orig[state] = _ptb.get_ks_permutation_values(dfs[state], 'UTI', 'CS_RACA_PRIVILEGED', 1, 100)
+            kl_perm[state], kl_orig[state] = _ptb.get_kl_divergence_permutation_values(dfs[state], 'VACINA_COV', 'CS_RACA_PRIVILEGED', 1, 100)
+            ks_perm[state], ks_orig[state] = _ptb.get_ks_permutation_values(dfs[state], 'VACINA_COV', 'CS_RACA_PRIVILEGED', 1, 100)
 
         ci_df_perm = pd.DataFrame(ci_perm)
         melted_ci_df_perm = pd.melt(ci_df_perm, value_vars=ci_df_perm.columns)

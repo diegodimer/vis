@@ -16,17 +16,18 @@ class ModelTrainer:
     models = {}
     dataReader = None
 
-    def __init__(self, year):
+    def __init__(self, year, target):
         """ Initialize the model trainer"""
         self.year = year
         self.data_reader = DataReader(year)
         self.region_data = self.data_reader.region_data()
+        self.target = target
         self.load_all_models()
 
-    def train_and_save_regional_model_for_year(self, df: pd.DataFrame, region: str, model):
+    def train_and_save_regional_model_for_year(self, df: pd.DataFrame, region: str, model, target: str):
         """ Train a model for all states, writing the saved model to a file"""
-        x = df.drop(columns=['UTI', 'SG_UF_NOT', 'ID_MUNICIP', 'SG_UF_INTE', 'SG_UF', "ID" ])
-        y = df['UTI']
+        x = df.drop(columns=['UTI', 'VACINA_COV', 'SG_UF_NOT', 'ID_MUNICIP', 'SG_UF_INTE', 'SG_UF', "ID" ])
+        y = df[target]
         x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=0.2, random_state=42)
         # n_i = len(x_train.axes[1])
         # n_o = 1
@@ -36,6 +37,8 @@ class ModelTrainer:
         # number_of_hidden_neurons = round(n_s / (alpha * (n_i + n_o)))
         # # round(number_of_hidden_neurons)
         # model = MLPClassifier(solver="adam", hidden_layer_sizes=(number_of_hidden_neurons,), random_state=42)
+        print(f"Training for {self.year} with target {self.target}")
+
         model.fit(x_train, y_train)
         pred_model = model.predict(x_test)
         print(f"Confusion Matrix for {region}: ")
@@ -48,11 +51,11 @@ class ModelTrainer:
         with open(filename, 'wb') as f:
             pickle.dump(model, f)
 
-    def generate_regional_models(self):
+    def generate_regional_models(self, target):
         """ Generate a model for each region"""
         for region, df in self.region_data.items():
             model = RandomForestClassifier(n_estimators=500, random_state=42)
-            self.train_and_save_regional_model_for_year(df, region, model)
+            self.train_and_save_regional_model_for_year(df, region, model, target)
 
     def load_all_models(self) -> dict:
         """ Load all models from a file"""
@@ -68,15 +71,16 @@ class ModelTrainer:
                 need_to_train = True
         if need_to_train:
             print("Models not found, training them")
-            self.generate_regional_models()
+            self.generate_regional_models(self.target)
 
     def predict_for_region(self, model_region, predicted_region) -> list:
-        """ Predicts the UTI for a given region"""
+        """ Predicts for a given region"""
+        print(f"Predicting for {self.year} with target {self.target}")
         model = self.models[model_region]
         target_data = self.region_data[predicted_region]
 
-        x = target_data.drop(columns=['UTI', 'SG_UF_NOT', 'ID_MUNICIP', 'SG_UF_INTE', 'SG_UF', "ID" ])
-        y = target_data['UTI']
+        x = target_data.drop(columns=['UTI', 'VACINA_COV', 'SG_UF_NOT', 'ID_MUNICIP', 'SG_UF_INTE', 'SG_UF', "ID" ])
+        y = target_data[self.target]
 
         y_pred = model.predict(x)
         print(f"Confusion Matrix for {predicted_region} on model trained for {model_region}: ")

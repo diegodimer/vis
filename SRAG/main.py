@@ -23,8 +23,8 @@ import pandas as pd
 # maior discrepancia de KS: norte e sul + sudeste e norte + centro-oeste e norte
 # maior discrepancia de CI: sul e sudeste
 
-model_2021 = ModelTrainer("2021")
-model_2023 = ModelTrainer("2023")
+model_2021 = ModelTrainer("2021", 'UTI')
+model_2023 = ModelTrainer("2023", 'VACINA_COV')
 acc_2021 = {}
 acc_2023 = {}
 f1_2021 = {}

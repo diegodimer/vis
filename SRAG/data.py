@@ -34,20 +34,21 @@ class DataReader:
             columns = [line.rstrip() for line in f]
 
         df = pd.read_csv(self.csv_file, sep=';', quotechar='"', encoding='utf-8', low_memory=False)
-        df = df.filter(items=columns)
-        DataReader.beautify_dataframe(df)
-        df.to_csv(self.target_csv_file)
-        return df
+        self.df = df.filter(items=columns)
+        self.beautify_dataframe()
+        self.df.to_csv(self.target_csv_file)
+        return self.df
 
     def beautify_dataframe(self):
         """ Beautify the dataframe """
-        self.df.dropna(subset = ['UTI', "CS_RACA", "CS_SEXO"], inplace=True)
+        self.df.dropna(subset = ['UTI', "CS_RACA", "CS_SEXO", "VACINA_COV"], inplace=True)
         self.df.fillna(9, inplace=True)
         self.df.drop(self.df.loc[self.df['UTI']==9].index, inplace=True)
         self.df.drop(self.df.loc[self.df['CS_SEXO']=="I"].index, inplace=True)
         self.df.drop(self.df.loc[self.df['CS_RACA']==9].index, inplace=True)
         self.df.drop(self.df.loc[self.df['DT_NASC']==9].index, inplace=True)
         self.df.drop(self.df.loc[self.df['DT_SIN_PRI']==9].index, inplace=True)
+        self.df.drop(self.df.loc[self.df['VACINA_COV']==9].index, inplace=True)
         self.df.dropna(inplace=True)
 
         self.df['DT_SIN_PRI'] = pd.to_datetime(self.df['DT_SIN_PRI'], format='%d/%m/%Y')
@@ -58,6 +59,7 @@ class DataReader:
         self.df['DT_NASC'] = self.df['DT_NASC'] / 10**9
         self.df['CS_SEXO'] = self.df['CS_SEXO'].map({'F': 0, 'M': 1})
         self.df['UTI'] = self.df['UTI'].map({1: 1, 2: 0})
+        self.df['VACINA_COV'] = self.df['VACINA_COV'].map({1: 1, 2: 0})
 
     def state_counts(self):
         """ Returns a dataframe with the number of cases per state """
@@ -101,7 +103,7 @@ class DataReader:
         ptb = PreTrainingBias()
         for state in self.df['SG_UF_NOT'].unique():
             new_df = self.df.loc[self.df['SG_UF_NOT'] == state].copy()
-            dfs[state] = ptb.kl_divergence(new_df, 'UTI', attribute, privileged_group)
+            dfs[state] = ptb.kl_divergence(new_df, 'VACINA_COV', attribute, privileged_group)
         df = pd.DataFrame(dfs, index=['KL'])
         df = pd.melt(df, value_vars=df.columns)
         df.columns = ['id', 'KL']
@@ -113,7 +115,7 @@ class DataReader:
         ptb = PreTrainingBias()
         for state in self.df['SG_UF_NOT'].unique():
             new_df = self.df.loc[self.df['SG_UF_NOT'] == state].copy()
-            dfs[state] = ptb.ks(new_df, 'UTI', attribute, privileged_group)
+            dfs[state] = ptb.ks(new_df, 'VACINA_COV', attribute, privileged_group)
         df = pd.DataFrame(dfs, index=['KS'])
         df = pd.melt(df, value_vars=df.columns)
         df.columns = ['id', 'KS']
@@ -165,7 +167,7 @@ class DataReader:
         ptb = PreTrainingBias()
         for region, states in regions.items():
             new_df = self.df.loc[self.df['SG_UF_NOT'].isin(regions[region])].copy()
-            region_ks = ptb.ks(new_df, 'UTI', attribute, privileged_group)
+            region_ks = ptb.ks(new_df, 'VACINA_COV', attribute, privileged_group)
             for state in states:
                 dfs[state] = region_ks
         df = pd.DataFrame(dfs, index=['KS'])
@@ -186,7 +188,7 @@ class DataReader:
         ptb = PreTrainingBias()
         for region, states in regions.items():
             new_df = self.df.loc[self.df['SG_UF_NOT'].isin(regions[region])].copy()
-            region_kl = ptb.kl_divergence(new_df, 'UTI', attribute, privileged_group)
+            region_kl = ptb.kl_divergence(new_df, 'VACINA_COV', attribute, privileged_group)
             for state in states:
                 dfs[state] = region_kl
         df = pd.DataFrame(dfs, index=['KL'])
