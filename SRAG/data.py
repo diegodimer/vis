@@ -6,138 +6,197 @@ from pretrainingbias.pre_training_bias import PreTrainingBias
 
 class DataReader:
     """ Class to read the data from the csv file and generate a processed csv file"""
-    @staticmethod
-    def get_srag_2021():
-        """ Returns the SRAG data from 2021 """
-        return DataReader.pre_process_srag_2021()
+    year = ""
+    df = None
 
-    @staticmethod
-    def get_srag_2023():
-        """ Returns the SRAG data from 2023 """
-        return DataReader.pre_process_srag_2023()
+    def __init__(self, year):
+        """ Initialize the data reader"""
+        self.year = year
+        if year == '2021':
+            self.csv_file = "resources/datasets/INFLUD21-01-05-2023.csv"
+            self.target_csv_file = "resources/datasets/PROCESSED_INFLUD21-01-05-2023.csv"
+            self.df = self.pre_process_srag()
+        else:
+            self.csv_file = "resources/datasets/INFLUD23-16-10-2023.csv"
+            self.target_csv_file = "resources/datasets/PROCESSED_INFLUD23-16-10-2023.csv"
+            self.df = self.pre_process_srag()
 
-    @staticmethod
-    def pre_process_srag_2021():
+    def get_dataframe(self) -> pd.DataFrame:
+        """ Returns the dataframe"""
+        return self.df
+
+    def pre_process_srag(self):
         """ Preprocess the SRAG data from 2021 """
-        if os.path.isfile("resources/datasets/PROCESSED_INFLUD21-01-05-2023.csv"):
-            return pd.read_csv("resources/datasets/PROCESSED_INFLUD21-01-05-2023.csv")
+        if os.path.isfile(self.target_csv_file):
+            return pd.read_csv(self.target_csv_file)
 
-        csv_file = "resources/datasets/INFLUD21-01-05-2023.csv"
         with open("resources/datasets/columns.txt", 'r', encoding='utf-8') as f:
             columns = [line.rstrip() for line in f]
 
-        df = pd.read_csv(csv_file, sep=';', quotechar='"', encoding='utf-8', low_memory=False)
+        df = pd.read_csv(self.csv_file, sep=';', quotechar='"', encoding='utf-8', low_memory=False)
         df = df.filter(items=columns)
         DataReader.beautify_dataframe(df)
-        df.to_csv("resources/datasets/PROCESSED_INFLUD21-01-05-2023.csv")
+        df.to_csv(self.target_csv_file)
         return df
 
-    @staticmethod
-    def pre_process_srag_2023():
-        """ Preprocess the SRAG data from 2023 """
-        if os.path.isfile("resources/datasets/PROCESSED_INFLUD23-16-10-2023.csv"):
-            return pd.read_csv("resources/datasets/PROCESSED_INFLUD23-16-10-2023.csv")
-
-        csv_file = "resources/datasets/INFLUD23-16-10-2023.csv"
-        with open("resources/datasets/columns.txt", 'r', encoding='utf-8') as f:
-            columns = [line.rstrip() for line in f]
-
-        df = pd.read_csv(csv_file, sep=';', quotechar='"', encoding='utf-8')
-        df = df.filter(items=columns)
-        DataReader.beautify_dataframe(df)
-        df.to_csv("resources/datasets/PROCESSED_INFLUD23-16-10-2023.csv")
-        return df
-
-    @staticmethod
-    def beautify_dataframe(df):
+    def beautify_dataframe(self):
         """ Beautify the dataframe """
-        df.dropna(subset = ['UTI', "CS_RACA", "CS_SEXO"], inplace=True)
-        df.fillna(9, inplace=True)
-        df.drop(df.loc[df['UTI']==9].index, inplace=True)
-        df.drop(df.loc[df['CS_SEXO']=="I"].index, inplace=True)
-        df.drop(df.loc[df['CS_RACA']==9].index, inplace=True)
-        df.drop(df.loc[df['DT_NASC']==9].index, inplace=True)
-        df.drop(df.loc[df['DT_SIN_PRI']==9].index, inplace=True)
-        df.dropna(inplace=True)
-        
-        df['DT_SIN_PRI'] = pd.to_datetime(df['DT_SIN_PRI'], format='%d/%m/%Y')
-        df['DT_SIN_PRI'] = df['DT_SIN_PRI'].astype(int) 
-        df['DT_SIN_PRI'] = df['DT_SIN_PRI'] / 10**9
-        df['DT_NASC'] = pd.to_datetime(df['DT_NASC'], format='%d/%m/%Y')
-        df['DT_NASC'] = df['DT_NASC'].astype(int) 
-        df['DT_NASC'] = df['DT_NASC'] / 10**9
-        df['CS_SEXO'] = df['CS_SEXO'].map({'F': 0, 'M': 1})
-        df['UTI'] = df['UTI'].map({1: 1, 2: 0})
+        self.df.dropna(subset = ['UTI', "CS_RACA", "CS_SEXO"], inplace=True)
+        self.df.fillna(9, inplace=True)
+        self.df.drop(self.df.loc[self.df['UTI']==9].index, inplace=True)
+        self.df.drop(self.df.loc[self.df['CS_SEXO']=="I"].index, inplace=True)
+        self.df.drop(self.df.loc[self.df['CS_RACA']==9].index, inplace=True)
+        self.df.drop(self.df.loc[self.df['DT_NASC']==9].index, inplace=True)
+        self.df.drop(self.df.loc[self.df['DT_SIN_PRI']==9].index, inplace=True)
+        self.df.dropna(inplace=True)
 
-    @staticmethod
-    def state_counts(df):
+        self.df['DT_SIN_PRI'] = pd.to_datetime(self.df['DT_SIN_PRI'], format='%d/%m/%Y')
+        self.df['DT_SIN_PRI'] = self.df['DT_SIN_PRI'].astype(int)
+        self.df['DT_SIN_PRI'] = self.df['DT_SIN_PRI'] / 10**9
+        self.df['DT_NASC'] = pd.to_datetime(self.df['DT_NASC'], format='%d/%m/%Y')
+        self.df['DT_NASC'] = self.df['DT_NASC'].astype(int)
+        self.df['DT_NASC'] = self.df['DT_NASC'] / 10**9
+        self.df['CS_SEXO'] = self.df['CS_SEXO'].map({'F': 0, 'M': 1})
+        self.df['UTI'] = self.df['UTI'].map({1: 1, 2: 0})
+
+    def state_counts(self):
         """ Returns a dataframe with the number of cases per state """
-        return df.groupby('SG_UF_NOT').size().reset_index(name='counts')
+        return self.df.groupby('SG_UF_NOT').size().reset_index(name='counts')
 
-    @staticmethod
-    def state_data(df: pd.DataFrame) -> dict:
+    def state_data(self) -> dict:
         """ Returns a dictionary with the dataframes for each state """
         dfs = {}
-        for state in df['SG_UF_NOT'].unique():
-            new_df = df.loc[df['SG_UF_NOT'] == state].copy()
+        for state in self.df['SG_UF_NOT'].unique():
+            new_df = self.df.loc[self.df['SG_UF_NOT'] == state].copy()
 
             dfs[state] = new_df
         return dfs
-    
-    @staticmethod
-    def state_counts_normalized(df):
+
+    def region_data(self) -> dict:
+        """ Returns a dictionary with the dataframes for each region """
+        regions = {
+            'sul': ['PR', 'SC', 'RS'],
+            'sudeste': ['SP', 'RJ', 'MG', 'ES'],
+            'centro_oeste': ['MS', 'MT', 'GO', 'DF'],
+            'nordeste': ['MA', 'PI', 'CE', 'RN', 'PE', 'PB', 'SE', 'AL', 'BA'],
+            'norte': ['AC', 'AP', 'AM', 'PA', 'RO', 'RR', 'TO']
+        }
+        dfs = {}
+        for region, states in regions.items():
+            new_df = self.df.loc[self.df['SG_UF_NOT'].isin(states)].copy()
+            dfs[region] = new_df
+        return dfs
+
+    def state_counts_normalized(self) -> pd.DataFrame:
         """ Returns a dataframe with the number of cases per state normalized by the population"""
         population = pd.read_csv("resources/datasets/IBGE2022.csv", sep=';', quotechar='"', encoding='utf-8')
-        df = df.groupby('SG_UF_NOT').size().reset_index(name='total')
-        df['population'] = df['SG_UF_NOT'].map(population.set_index('UF')['POPULACAO'])
-        df['normalized'] = df['total']/df['population'] * 100000
-        return df
+        new_df = self.df.groupby('SG_UF_NOT').size().reset_index(name='total').copy()
+        new_df['population'] = new_df['SG_UF_NOT'].map(population.set_index('UF')['POPULACAO'])
+        new_df['normalized'] = new_df['total']/new_df['population'] * 100000
+        return new_df
 
-    @staticmethod
-    def kl_divergence_per_state(df):
+    def kl_divergence_per_state(self, attribute, privileged_group=1) -> pd.DataFrame:
         """ Returns a dictionary with the KL divergence for each state """
         dfs = {}
         ptb = PreTrainingBias()
-        for state in df['SG_UF_NOT'].unique():
-            new_df = df.loc[df['SG_UF_NOT'] == state].copy()
-            dfs[state] = ptb.kl_divergence(new_df, 'UTI', 'CS_RACA_PRIVILEGED', 1)
+        for state in self.df['SG_UF_NOT'].unique():
+            new_df = self.df.loc[self.df['SG_UF_NOT'] == state].copy()
+            dfs[state] = ptb.kl_divergence(new_df, 'UTI', attribute, privileged_group)
         df = pd.DataFrame(dfs, index=['KL'])
         df = pd.melt(df, value_vars=df.columns)
         df.columns = ['id', 'KL']
         return df
-    
-    @staticmethod
-    def ks_per_state(df):
+
+    def ks_per_state(self, attribute, privileged_group=1) -> pd.DataFrame:
         """ Returns a dictionary with the KS for each state """
         dfs = {}
         ptb = PreTrainingBias()
-        for state in df['SG_UF_NOT'].unique():
-            new_df = df.loc[df['SG_UF_NOT'] == state].copy()
-            dfs[state] = ptb.ks(new_df, 'UTI', 'CS_RACA_PRIVILEGED', 1)
+        for state in self.df['SG_UF_NOT'].unique():
+            new_df = self.df.loc[self.df['SG_UF_NOT'] == state].copy()
+            dfs[state] = ptb.ks(new_df, 'UTI', attribute, privileged_group)
         df = pd.DataFrame(dfs, index=['KS'])
         df = pd.melt(df, value_vars=df.columns)
         df.columns = ['id', 'KS']
         return df
-    
-    @staticmethod
-    def ci_per_state(df):
+
+    def ci_per_state(self, attribute) -> pd.DataFrame:
         """ Returns a dictionary with the class imbalance for each state """
         dfs = {}
         ptb = PreTrainingBias()
-        for state in df['SG_UF_NOT'].unique():
-            new_df = df.loc[df['SG_UF_NOT'] == state].copy()
-            dfs[state] = ptb.class_imbalance(new_df, 'CS_RACA_PRIVILEGED')
+        for state in self.df['SG_UF_NOT'].unique():
+            new_df = self.df.loc[self.df['SG_UF_NOT'] == state].copy()
+            dfs[state] = ptb.class_imbalance(new_df, attribute)
         df = pd.DataFrame(dfs, index=['CI'])
         df = pd.melt(df, value_vars=df.columns)
         df.columns = ['id', 'CI']
         return df
-    
-    @staticmethod
-    def state_dataframes(df):
+
+    def ci_per_region(self, attribute) -> pd.DataFrame:
+        """ Returns a dictionary with the class imbalance for each region"""
+        regions = {
+            'sul': ['PR', 'SC', 'RS'],
+            'sudeste': ['SP', 'RJ', 'MG', 'ES'],
+            'centro_oeste': ['MS', 'MT', 'GO', 'DF'],
+            'nordeste': ['MA', 'PI', 'CE', 'RN', 'PE', 'PB', 'SE', 'AL', 'BA'],
+            'norte': ['AC', 'AP', 'AM', 'PA', 'RO', 'RR', 'TO']
+        }
+        dfs = {}
+        ptb = PreTrainingBias()
+        for region, states in regions.items():
+            new_df = self.df.loc[self.df['SG_UF_NOT'].isin(regions[region])].copy()
+            region_ci = ptb.class_imbalance(new_df, attribute)
+            for state in states:
+                dfs[state] = region_ci
+        df = pd.DataFrame(dfs, index=['CI'])
+        df = pd.melt(df, value_vars=df.columns)
+        df.columns = ['id', 'CI']
+        return df
+
+    def ks_per_region(self, attribute, privileged_group) -> pd.DataFrame:
+        """ Returns a dictionary with the KS for each region"""
+        regions = {
+            'sul': ['PR', 'SC', 'RS'],
+            'sudeste': ['SP', 'RJ', 'MG', 'ES'],
+            'centro_oeste': ['MS', 'MT', 'GO', 'DF'],
+            'nordeste': ['MA', 'PI', 'CE', 'RN', 'PE', 'PB', 'SE', 'AL', 'BA'],
+            'norte': ['AC', 'AP', 'AM', 'PA', 'RO', 'RR', 'TO']
+        }
+        dfs = {}
+        ptb = PreTrainingBias()
+        for region, states in regions.items():
+            new_df = self.df.loc[self.df['SG_UF_NOT'].isin(regions[region])].copy()
+            region_ks = ptb.ks(new_df, 'UTI', attribute, privileged_group)
+            for state in states:
+                dfs[state] = region_ks
+        df = pd.DataFrame(dfs, index=['KS'])
+        df = pd.melt(df, value_vars=df.columns)
+        df.columns = ['id', 'KS']
+        return df
+
+    def kl_per_region(self, attribute, privileged_group) -> pd.DataFrame:
+        """ Returns a dictionary with the KL divergence for each region"""
+        regions = {
+            'sul': ['PR', 'SC', 'RS'],
+            'sudeste': ['SP', 'RJ', 'MG', 'ES'],
+            'centro_oeste': ['MS', 'MT', 'GO', 'DF'],
+            'nordeste': ['MA', 'PI', 'CE', 'RN', 'PE', 'PB', 'SE', 'AL', 'BA'],
+            'norte': ['AC', 'AP', 'AM', 'PA', 'RO', 'RR', 'TO']
+        }
+        dfs = {}
+        ptb = PreTrainingBias()
+        for region, states in regions.items():
+            new_df = self.df.loc[self.df['SG_UF_NOT'].isin(regions[region])].copy()
+            region_kl = ptb.kl_divergence(new_df, 'UTI', attribute, privileged_group)
+            for state in states:
+                dfs[state] = region_kl
+        df = pd.DataFrame(dfs, index=['KL'])
+        df = pd.melt(df, value_vars=df.columns)
+        df.columns = ['id', 'KL']
+        return df
+
+    def state_dataframes(self) -> pd.DataFrame:
         """ Returns a dictionary with the dataframes for each state """
         dfs = {}
-        for state in df['SG_UF_NOT'].unique():
-            dfs[state] = df.loc[df['SG_UF_NOT'] == state]
+        for state in self.df['SG_UF_NOT'].unique():
+            dfs[state] = self.df.loc[self.df['SG_UF_NOT'] == state].copy()
         return dfs
-DataReader.get_srag_2021()
-DataReader.get_srag_2023()

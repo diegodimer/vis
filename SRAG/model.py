@@ -1,88 +1,89 @@
-#pylint: skip-file
+""" Module to train the model for a given year"""
 import pickle
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.metrics import classification_report, confusion_matrix
 from sklearn.model_selection import train_test_split
-from SRAG.data import DataReader
-from sklearn.model_selection import GridSearchCV
 import pandas as pd
 
+from SRAG.data import DataReader
 
 class ModelTrainer:
-    
-    # def train_data_for_each_state(self, df: pd.DataFrame, year: str):
-    #     """ Train a model for each state, writing the saved model to a file"""
-    #     param_grid = {
-    #         'bootstrap': [True],
-    #         'max_depth': [80],
-    #         'max_features': [2],
-    #         'min_samples_leaf': [3],
-    #         'min_samples_split': [8],
-    #         'n_estimators': [100]
-    #     }
-        
-    #     for state in df:
-    #         X = df[state].drop(columns=['UTI', 'SG_UF_NOT', 'ID_MUNICIP', 'SG_UF_INTE', 'SG_UF', "ID"])
-    #         y = df[state]['UTI']
-    #         X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
-    #         grid = GridSearchCV(RandomForestClassifier(), param_grid, refit = True, verbose=0)
-    #         grid.fit(X_train, y_train)
-    #         pred_grid = grid.predict(X_test)
-    #         print(f"Confusion Matrix for {state}: ")
-    #         print(confusion_matrix(y_test, pred_grid))
-    #         print(f"Classification Report for {state}: ")
-    #         print(classification_report(y_test, pred_grid))
-    #         filename = f'resources/models/{year}/{state}.sav'
-    #         pickle.dump(grid, open(filename, 'wb'))
-            
-    def train_data_for_all_states(self, df: pd.DataFrame, year: str, region: str):
+    """ Class to train the model for a given year"""
+    year = ""
+    region_data = {}
+    models = {}
+    dataReader = None
+
+    def __init__(self, year):
+        """ Initialize the model trainer"""
+        self.year = year
+        self.data_reader = DataReader(year)
+        self.region_data = self.data_reader.region_data()
+        self.load_all_models()
+
+    def train_and_save_regional_model_for_year(self, df: pd.DataFrame, region: str):
         """ Train a model for all states, writing the saved model to a file"""
-   
-        sys.stdout=open(f"resources/models/{year}/{region}-logs.txt","w")
-        X = df.drop(columns=['UTI', 'SG_UF_NOT', 'ID_MUNICIP', 'SG_UF_INTE', 'SG_UF', "ID" ])
+        x = df.drop(columns=['UTI', 'SG_UF_NOT', 'ID_MUNICIP', 'SG_UF_INTE', 'SG_UF', "ID" ])
         y = df['UTI']
-        X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+        x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=0.2, random_state=42)
         grid = RandomForestClassifier(n_estimators=500  )
-        grid.fit(X_train, y_train)
-        
-        pred_grid = grid.predict(X_test)
+        grid.fit(x_train, y_train)
+
+        pred_grid = grid.predict(x_test)
         print(f"Confusion Matrix for {region}: ")
         print(confusion_matrix(y_test, pred_grid))
         print(f"Classification Report for {region}: ")
         print(classification_report(y_test, pred_grid))
-        filename = f'resources/models/{year}/{region}.sav'
-        pickle.dump(grid, open(filename, 'wb'))
-        sys.stdout.close()
-        
-    def brasil_regions(self, df: pd.DataFrame, year: str):
-        sul = ['PR', 'SC', 'RS']
-        sudeste = ['SP', 'RJ', 'MG', 'ES']
-        centro_oeste = ['MS', 'MT', 'GO', 'DF']
-        nordeste = ['MA', 'PI', 'CE', 'RN', 'PE', 'PB', 'SE', 'AL', 'BA']
-        norte = ['AC, AP', 'AM', 'PA', 'RO', 'RR', 'TO']
-        
-        df_sul = df.loc[df['SG_UF_NOT'].isin(sul)]
-        self.train_data_for_all_states(df_sul, year, 'sul')
-        df_sudeste = df.loc[df['SG_UF_NOT'].isin(sudeste)]
-        self.train_data_for_all_states(df_sudeste, year, 'sudeste')
-        df_centro_oeste = df.loc[df['SG_UF_NOT'].isin(centro_oeste)]
-        self.train_data_for_all_states(df_centro_oeste, year, 'centro_oeste')
-        df_nordeste = df.loc[df['SG_UF_NOT'].isin(nordeste)]
-        self.train_data_for_all_states(df_nordeste, year, 'nordeste')
-        df_norte = df.loc[df['SG_UF_NOT'].isin(norte)]
-        self.train_data_for_all_states(df_norte, year, 'norte')
-        
-        
-import sys
 
+        filename = f'resources/models/{self.year}/{region}.sav'
 
-b = ModelTrainer()
+        with open(filename, 'wb') as f:
+            pickle.dump(grid, f)
 
-b.brasil_regions(DataReader.get_srag_2023(), '2023')
+    def generate_regional_models(self):
+        """ Generate a model for each region"""
+        for region, df in self.region_data.items():
+            self.train_and_save_regional_model_for_year(df, region)
 
+    def load_all_models(self) -> dict:
+        """ Load all models from a file"""
+        for region in self.region_data:
+            filename = f'resources/models/{self.year}/{region}.sav'
+            with open(filename, 'rb') as f:
+                loaded_model = pickle.load(f)
+            self.models[region] = loaded_model
 
+    def predict_for_region(self, model_region, predicted_region) -> list:
+        """ Predicts the UTI for a given region"""
+        model = self.models[model_region]
+        target_data = self.region_data[predicted_region]
 
+        x = target_data.drop(columns=['UTI', 'SG_UF_NOT', 'ID_MUNICIP', 'SG_UF_INTE', 'SG_UF', "ID" ])
+        y = target_data['UTI']
+        _, x_test, _, y_test = train_test_split(x, y, test_size=0.2, random_state=42)
 
+        y_pred = model.predict(x_test)
+        print(f"Confusion Matrix for {predicted_region} on model trained for {model_region}: ")
+        print(confusion_matrix(y_test, y_pred))
+        print(f"Classification Report for {predicted_region} on model trained for {model_region}: ")
+        print(classification_report(y_test, y_pred))
 
-# b.brasil_regions(DataReader.get_srag_2023(), '2023')
+# Sex 2021
+# maior discrepancia de KL: nordeste e sul
+# maior discrepancia de KS: nordeste e sul
+# maior discrepancia de CI: norte e nordeste
 
+# Sex 2023
+# maior discrepancia de KL: nordeste e sul
+# maior discrepancia de KS: nordeste e sul
+# maior discrepancia de CI: norte e sul
+
+# Race 2023
+# maior discrepancia de KL: nordeste e sul + nordeste e sudeste + nordeste e centro-oeste
+# maior discrepancia de KS: nordeste e sul + nordeste e sudeste + nordeste e centro-oeste
+# maior discrepancia de CI: sul e sudeste
+
+# Race 2021
+# maior discrepancia de KL: norte e sul + sudeste e norte + centro-oeste e norte
+# maior discrepancia de KS: norte e sul + sudeste e norte + centro-oeste e norte
+# maior discrepancia de CI: sul e sudeste

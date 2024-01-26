@@ -8,13 +8,15 @@ import pandas as pd
 from pretrainingbias.pre_training_bias import PreTrainingBias
 
 class MapRenderer:
-
+    """ Class to render the maps"""
+    
     @staticmethod
     def open_geojson():
+        """ Open the geojson file"""
         with open("resources/geojson/br_states.json") as json_data:
             d = json.load(json_data)
         return d
-    
+
     @staticmethod
     def gen_map(geodata, color_column, gdf, color_scheme='yelloworangered'):
         '''
@@ -25,35 +27,6 @@ class MapRenderer:
                            scope="south america",
                           )
         return fig
-
-
-    @staticmethod
-    def get_srag_2021_choro():
-        df_2021 = DataReader.state_counts(DataReader.get_srag_2021())
-        df_2021.rename(columns={'SG_UF_NOT': 'estado'}, inplace=True)
-        gdf = MapRenderer.open_geojson()
-        return MapRenderer.gen_map(df_2021, 'counts', gdf)
-    
-    
-    @staticmethod
-    def get_srag_2023_choro():
-        df_2023 = DataReader.state_counts(DataReader.get_srag_2023())
-        df_2023.rename(columns={'SG_UF_NOT': 'estado'}, inplace=True)
-        gdf = MapRenderer.open_geojson()
-        return MapRenderer.gen_map(df_2023, 'counts', gdf)
-    
-    
-
-    @staticmethod
-    def topojson_version_2023():
-        df_2023 = DataReader.state_counts_normalized(DataReader.get_srag_2023())
-        return MapRenderer.get_chart(df_2023)
-
-
-    @staticmethod
-    def topojson_version_2021():
-        df_2021 = DataReader.state_counts_normalized(DataReader.get_srag_2021())
-        return MapRenderer.get_chart(df_2021)
 
     @staticmethod
     def get_chart(df):
@@ -75,17 +48,15 @@ class MapRenderer:
             ),
         ).properties(width=1280, height=720).project(
             type="mercator", scale=1000, center=[-54, -15]).add_params(alt.selection_interval())
-        
+
     @staticmethod
     def make_html_maps(year):
         json_gdf = MapRenderer.open_geojson()
-        if year == '2023':
-            df = DataReader.get_srag_2023()
-            uf_normalized_data = DataReader.state_counts_normalized(DataReader.get_srag_2023())
-        else:
-            df = DataReader.get_srag_2021()
-            uf_normalized_data = DataReader.state_counts_normalized(DataReader.get_srag_2021())
 
+        data_reader = DataReader(year)
+        df =  data_reader.get_dataframe()
+        uf_normalized_data = data_reader.state_counts_normalized()
+   
         data_geo = alt.Data(values=json_gdf['features'])
         uf_normalized_data['id'] = uf_normalized_data['SG_UF_NOT']
 
@@ -97,7 +68,7 @@ class MapRenderer:
             tooltip=[alt.Text('normalized:Q')],
             color=alt.condition(pts, alt.ColorValue("steelblue"), alt.ColorValue("grey"))
         ).add_params(pts)
-       
+
         map = alt.Chart(data_geo).mark_geoshape(stroke="white", strokeWidth=2).encode(
             color=alt.Color(
                 "normalized:Q",
@@ -112,15 +83,15 @@ class MapRenderer:
             ),
         ).project(
             type="mercator").add_params(pts).properties(width=1280, height=720)
-        
+
         map = map.encode(
             opacity=alt.condition(pts, alt.value(1), alt.value(0.3))
         )
-        
-        dfs = DataReader.state_dataframes(df)
+
+        dfs = data_reader.state_dataframes()
         _ptb = PreTrainingBias()
-        
-        
+
+
         ci_perm = {}
         ci_orig = {}
         kl_perm = {}
@@ -132,7 +103,7 @@ class MapRenderer:
             ci_perm[state], ci_orig[state] = _ptb.get_class_imbalance_permutation_values(dfs[state], 'CS_RACA_PRIVILEGED', 100)
             kl_perm[state], kl_orig[state] = _ptb.get_kl_divergence_permutation_values(dfs[state], 'UTI', 'CS_RACA_PRIVILEGED', 1, 100)
             ks_perm[state], ks_orig[state] = _ptb.get_ks_permutation_values(dfs[state], 'UTI', 'CS_RACA_PRIVILEGED', 1, 100)
-        
+
         ci_df_perm = pd.DataFrame(ci_perm)
         melted_ci_df_perm = pd.melt(ci_df_perm, value_vars=ci_df_perm.columns)
         melted_ci_df_perm.columns = ['id', 'Class Imbalance']
@@ -140,7 +111,7 @@ class MapRenderer:
         melted_ci_df_perm['index'] = melted_ci_df_perm.index
 
         ci_orig_df = pd.DataFrame(ci_orig, index=['Class Imbalance'])
-        
+
         kl_df_perm = pd.DataFrame(kl_perm)
         melted_kl_df_perm = pd.melt(kl_df_perm, value_vars=kl_df_perm.columns)
         melted_kl_df_perm.columns = ['id', 'KL Divergence']
@@ -148,7 +119,7 @@ class MapRenderer:
         melted_kl_df_perm['index'] = melted_kl_df_perm.index
 
         kl_orig_df = pd.DataFrame(kl_orig, index=['KL Divergence'])
-        
+
         ks_df_perm = pd.DataFrame(ks_perm)
         melted_ks_df_perm = pd.melt(ks_df_perm, value_vars=ks_df_perm.columns)
         melted_ks_df_perm.columns = ['id', 'KS']
@@ -156,21 +127,27 @@ class MapRenderer:
         melted_ks_df_perm['index'] = melted_ks_df_perm.index
 
         ks_orig_df = pd.DataFrame(ks_orig, index=['KS'])
-        
-        df['CS_RACA_PRIVILEGED'] = df['CS_RACA'].map({1: 1, 2: 0, 3: 0, 4:0, 5:0})
+
+        data_reader.df['CS_RACA_PRIVILEGED'] = data_reader.df['CS_RACA'].map({1: 1, 2: 0, 3: 0, 4:0, 5:0})
 
         ci_chart = MapRenderer.get_metric_dispersion(melted_ci_df_perm, ci_orig_df, 'Class Imbalance', pts)
         kl_chart = MapRenderer.get_metric_dispersion(melted_kl_df_perm, kl_orig_df, 'KL Divergence', pts)
         ks_chart = MapRenderer.get_metric_dispersion(melted_ks_df_perm, ks_orig_df, 'KS', pts)
-        
-        
+
+
         chart = alt.hconcat(bar, map)
         metrics_charts = alt.hconcat(ci_chart, kl_chart, ks_chart)
         chart = alt.vconcat(chart, metrics_charts, center=True, spacing=10, background='white', title=f"SRAG {year}" , bounds='full', autosize=alt.AutoSizeParams(type='fit', contains='padding'))
-        
-        MapRenderer.get_map(data_geo, year, "KL", DataReader.kl_divergence_per_state(df), 'viridis')
-        MapRenderer.get_map(data_geo, year, "KS", DataReader.ks_per_state(df), 'inferno')
-        MapRenderer.get_map(data_geo, year, "CI", DataReader.ci_per_state(df), 'magma')
+
+        race_kl = MapRenderer.get_map(data_geo, year, "KL", data_reader.kl_per_region('CS_RACA_PRIVILEGED', 1), 'viridis', 'CS_RACA')
+        race_ks = MapRenderer.get_map(data_geo, year, "KS", data_reader.ks_per_region('CS_RACA_PRIVILEGED', 1), 'redyellowgreen', 'CS_RACA')
+        race_ci = MapRenderer.get_map(data_geo, year, "CI", data_reader.ci_per_region('CS_RACA_PRIVILEGED'), 'plasma', 'CS_RACA')
+        alt.hconcat(race_kl, race_ks, race_ci).resolve_scale(color='independent').save(f'resources/maps/race-{year}.html')
+
+        sex_kl = MapRenderer.get_map(data_geo, year, "KL", data_reader.kl_per_region('CS_SEXO', 1), 'viridis', 'CS_SEXO')
+        sex_ks = MapRenderer.get_map(data_geo, year, "KS", data_reader.ks_per_region('CS_SEXO', 1), 'redyellowgreen', 'CS_SEXO')
+        sex_ci = MapRenderer.get_map(data_geo, year, "CI", data_reader.ci_per_region('CS_SEXO'), 'plasma', 'CS_SEXO')
+        alt.hconcat(sex_kl, sex_ks, sex_ci).resolve_scale(color='independent').save(f'resources/maps/sex-{year}.html')
 
         chart.save(f'resources/geojson/{year}-2.html')
 
@@ -204,12 +181,12 @@ class MapRenderer:
         return c + original_line
 
     @staticmethod
-    def get_map(data_geo, year, metric_name, metric_df, color):
+    def get_map(data_geo, year, metric_name, metric_df, color, attribute):
         map = alt.Chart(data_geo).mark_geoshape(stroke="white", strokeWidth=2).encode(
             color=alt.Color(
                 f"{metric_name}:Q",
                 scale=alt.Scale(scheme=color),
-                legend=alt.Legend(title="Metric Value"),
+                legend=alt.Legend(title=f"{metric_name} Value", padding=0, orient='bottom', gradientLength=800),
             ),
             tooltip=[alt.Tooltip("id:O", title="UF"), alt.Tooltip(f"{metric_name}:Q", title=f"{metric_name} value")],
         ).transform_lookup(
@@ -219,13 +196,7 @@ class MapRenderer:
             ),
         ).project(
             type="mercator").properties(width=1280, height=720)
-        
-        # map = map.encode(
-        #     opacity=alt.condition(pts, alt.value(1), alt.value(0.3))
-        # )
-        map.save(f"resources/geojson/{metric_name}-{year}-metrics.html")
+
+        map.save(f"resources/geojson/{metric_name}-{year}-{attribute}-metrics.png")
 
         return map
-# MapRenderer.make_html_maps(DataReader.state_counts_normalized(DataReader.get_srag_2021()), '2021')
-MapRenderer.make_html_maps('2023')
-MapRenderer.make_html_maps('2021')
