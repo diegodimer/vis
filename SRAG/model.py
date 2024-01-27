@@ -49,7 +49,7 @@ class ModelTrainer:
     def generate_regional_models(self, target):
         """ Generate a model for each region"""
         for region, df in self.region_data.items():
-            model = RandomForestClassifier(n_estimators=100, random_state=42)
+            model = RandomForestClassifier(n_estimators=300, random_state=42)
             self.train_and_save_regional_model_for_year(df, region, model, target)
 
     def load_all_models(self) -> dict:
@@ -84,6 +84,8 @@ class ModelTrainer:
         # print(classification_report(y, y_pred))
         acc = accuracy_score(y, y_pred)
         f1 = f1_score(y, y_pred)
+
+        print(f"acurácia de {acc} treinando para {predicted_region} com {model_region}")
 
         x['predicted'] = y_pred
         x['actual'] = y
