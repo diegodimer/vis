@@ -16,13 +16,15 @@ class ModelTrainer:
     models = {}
     dataReader = None
 
-    def __init__(self, year, target):
+    def __init__(self, year, target, skip_train=False):
         """ Initialize the model trainer"""
         self.year = year
         self.data_reader = DataReader(year)
         self.region_data = self.data_reader.region_data()
         self.target = target
-        self.load_all_models()
+        self.skip_train = skip_train
+        if not skip_train:
+            self.load_all_models()
 
     def train_and_save_regional_model_for_year(self, df: pd.DataFrame, region: str, model, target: str):
         """ Train a model for all states, writing the saved model to a file"""
