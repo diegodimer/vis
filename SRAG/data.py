@@ -16,7 +16,11 @@ class DataReader:
             self.csv_file = "resources/datasets/INFLUD21-01-05-2023.csv"
             self.target_csv_file = "resources/datasets/PROCESSED_INFLUD21-01-05-2023.csv"
             self.df = self.pre_process_srag()
-        else:
+        elif year == '2022':
+            self.csv_file = "resources/datasets/INFLUD22-03-04-2023.csv"
+            self.target_csv_file = "resources/datasets/PROCESSED_INFLUD22-03-04-2023.csv"
+            self.df = self.pre_process_srag()
+        elif year == '2023':
             self.csv_file = "resources/datasets/INFLUD23-16-10-2023.csv"
             self.target_csv_file = "resources/datasets/PROCESSED_INFLUD23-16-10-2023.csv"
             self.df = self.pre_process_srag()
@@ -26,7 +30,7 @@ class DataReader:
         return self.df
 
     def pre_process_srag(self):
-        """ Preprocess the SRAG data from 2021 """
+        """ Preprocess the SRAG data """
         if os.path.isfile(self.target_csv_file):
             return pd.read_csv(self.target_csv_file)
 

@@ -1,0 +1,6 @@
+,sul,sudeste,centro_oeste,nordeste,norte
+model sul,0.8679,0.8595,0.8095,0.7922,0.7576
+model sudeste,0.8636,0.8587,0.8009,0.7842,0.7515
+model centro_oeste,0.8665,0.859,0.811,0.7936,0.7593
+model nordeste,0.8665,0.8589,0.8086,0.799,0.7701
+model norte,0.8669,0.8583,0.8106,0.7975,0.7686

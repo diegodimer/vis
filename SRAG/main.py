@@ -24,10 +24,13 @@ import pandas as pd
 # maior discrepancia de CI: sul e sudeste
 
 model_2021 = ModelTrainer("2021", 'UTI')
+model_2022 = ModelTrainer("2022", 'VACINA_COV')
 model_2023 = ModelTrainer("2023", 'VACINA_COV')
 acc_2021 = {}
+acc_2022 = {}
 acc_2023 = {}
 f1_2021 = {}
+f1_2022 = {}
 f1_2023 = {}
 
 print("DATA FROM 2021")
@@ -46,6 +49,22 @@ for predicted_region in model_2021.region_data:
 
 pd.DataFrame(acc_2021).to_csv("resources/datasets/acc-2021.csv")
 pd.DataFrame(f1_2021).to_csv("resources/datasets/f1-2021.csv")
+
+print("\n\nDATA FROM 2022")
+
+for predicted_region in model_2022.region_data:
+    acc_region = {}
+    f1_region = {}
+    for model_region in model_2022.region_data:
+        print(f"Predicting {predicted_region} with model for {model_region}")
+        acc_model, f1_model = model_2022.predict_for_region(model_region, predicted_region)
+        acc_region[f"model {model_region}"] = acc_model
+        f1_region[f"model {model_region}"] = f1_model
+    acc_2022[predicted_region] = acc_region
+    f1_2022[predicted_region] = f1_region
+
+pd.DataFrame(acc_2022).to_csv("resources/datasets/acc-2022.csv")
+pd.DataFrame(f1_2022).to_csv("resources/datasets/f1-2022.csv")    
 
 print("\n\nDATA FROM 2023")
 
