@@ -5,9 +5,9 @@ import pandas as pd
 import altair as alt
 
 
-model_2021 = ModelTrainer("2021", 'UTI', True)
-model_2022 = ModelTrainer("2022", 'VACINA_COV', True)
-model_2023 = ModelTrainer("2023", 'VACINA_COV', True)
+model_2021 = ModelTrainer("2021", 'UTI')
+model_2022 = ModelTrainer("2022", 'VACINA_COV')
+model_2023 = ModelTrainer("2023", 'VACINA_COV')
 acc_2021 = {}
 acc_2022 = {}
 acc_2023 = {}
