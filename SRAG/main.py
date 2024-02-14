@@ -111,8 +111,8 @@ for year in ['2021', '2022', '2023']:
             true_positive_per_sex = true_positives.groupby('CS_SEXO').size()
             true_negative_per_sex = true_negatives.groupby('CS_SEXO').size()
             
-            num_privileged_sex = df.value_counts("CS_RACA_PRIVILEGED")[1]
-            num_unprivileged_sex = df.value_counts("CS_RACA_PRIVILEGED")[0]
+            num_privileged_sex = df.value_counts("CS_SEXO")[1]
+            num_unprivileged_sex = df.value_counts("CS_SEXO")[0]
             
             # sum_false_positive_sex = false_positive_per_sex[0] + false_positive_per_sex[1]
             # sum_false_negative_sex = false_negative_per_sex[0] + false_negative_per_sex[1]
@@ -134,4 +134,4 @@ for year in ['2021', '2022', '2023']:
                 y=alt.Y('count:Q', axis=alt.Axis(title='')),
                 color=alt.Color('index:N', legend=alt.Legend(title='Class')),
                 column= alt.Column('Output:N'), 
-            ).properties(width=200, height='container',title=f'{year} model trained on {model_region}, inference on region {region} - Sex').save(f"resources/charts/{year}/sex-{year}-model-{model_region}-region-{region}.png")
+            ).properties(width=200, height='container',title=f'{year} model trained on {model_region}, inference on region {region} - Sex (Normalized)').save(f"resources/charts/{year}/Normalized-sex-{year}-model-{model_region}-region-{region}.png")
